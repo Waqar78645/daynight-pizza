@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Day Night Pizza — Admin Panel</title>
-<link rel="icon" href="Pizzaimages/daynight-logo.svg">
+<link rel="icon" href="Pizzaimages/daynight-favicon.png">
 <link rel="stylesheet" href="assets/fonts/fonts.css">
 <link rel="stylesheet" href="assets/fontawesome/css/all.min.css">
 <style>
@@ -21,7 +21,7 @@ label{font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:upper
 /* login */
 #loginView{min-height:100dvh;display:flex;align-items:center;justify-content:center;background:var(--forest);padding:20px}
 .login-card{background:#fff;border-radius:22px;padding:36px;max-width:380px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,.35)}
-.login-card img{height:56px;margin-bottom:10px}
+.login-card img{width:100%;max-width:290px;height:auto;background:#0b0b0b;border-radius:14px;padding:12px 16px;margin-bottom:14px}
 .login-card h1{font-family:'Playfair Display',serif;font-size:1.7rem}
 .login-card p{color:var(--muted);font-size:.9rem;margin:.3rem 0 1rem}
 .err{color:var(--red);font-size:.85rem;font-weight:700;min-height:1.2em}
@@ -69,7 +69,7 @@ td img{width:44px;height:44px;border-radius:8px;object-fit:cover}
 <!-- ================= LOGIN ================= -->
 <div id="loginView">
   <form class="login-card" id="loginForm">
-    <img src="Pizzaimages/daynight-logo.svg" alt="Day Night Pizza">
+    <img src="Pizzaimages/daynight-logo.png" alt="Day Night Pizza">
     <h1>Admin Panel</h1>
     <p>Day Night Pizza, Dunga Bunga — manage menu, deals, orders &amp; payments.</p>
     <label>Username</label>
@@ -85,7 +85,7 @@ td img{width:44px;height:44px;border-radius:8px;object-fit:cover}
 <!-- ================= APP ================= -->
 <div id="appView">
   <aside>
-    <div class="brand"><img src="Pizzaimages/daynight-logo.svg" alt=""><b>Day Night Pizza<br><small style="font-family:'Plus Jakarta Sans';font-size:.62rem;letter-spacing:.25em;color:var(--gold)">ADMIN</small></b></div>
+    <div class="brand"><img src="Pizzaimages/daynight-emblem.png" alt=""><b>Day Night Pizza<br><small style="font-family:'Plus Jakarta Sans';font-size:.62rem;letter-spacing:.25em;color:var(--gold)">ADMIN</small></b></div>
     <nav id="tabs">
       <button data-tab="dashboard" class="active"><i class="fa-solid fa-gauge"></i> Dashboard</button>
       <button data-tab="products"><i class="fa-solid fa-pizza-slice"></i> Products</button>
@@ -335,6 +335,7 @@ async function loadStats(){
   $("recentOrders").innerHTML = s.recent_orders.length ? orderTableHTML(s.recent_orders, false)
     : "<p style='color:var(--muted)'>No orders yet — they will appear here as customers order.</p>";
 }
+function linkify(t){ return esc(t).replace(/(https?:\/\/[^\s]+)/g, u => `<a href="${u}" target="_blank" rel="noopener" style="color:var(--green);font-weight:700">\u{1F4CD} Live Location</a>`); }
 function itemsText(items){ return items.map(i => `${i.qty} × ${i.name} (${i.detail})`).join(", "); }
 function orderTableHTML(list, withActions = true){
   return `<table><tr><th>#</th><th>When</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th>${withActions ? "<th></th>" : ""}</tr>`
@@ -342,7 +343,7 @@ function orderTableHTML(list, withActions = true){
       <td><b>#${o.id}</b></td>
       <td style="white-space:nowrap">${esc(o.created_at).slice(0,16)} UTC</td>
       <td><b>${esc(o.customer_name)}</b><br><small>${esc(o.phone)} · ${esc(o.mode)}<br>${esc(o.branch)}</small></td>
-      <td style="max-width:300px">${esc(itemsText(o.items))}<br><small>${esc(o.address)}</small></td>
+      <td style="max-width:300px">${esc(itemsText(o.items))}<br><small>${esc(o.address)}</small>${o.notes ? `<br><small>${linkify(o.notes)}</small>` : ""}</td>
       <td><b>Rs. ${Number(o.total).toLocaleString()}</b></td>
       <td><small>${esc(o.payment_method)}<br>${esc(o.payment_status)}</small></td>
       <td>${withActions

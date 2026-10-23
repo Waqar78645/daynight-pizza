@@ -4,8 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Day Night Pizza — Dunga Bunga | Pizza Delivery & Dine-In</title>
-<link rel="icon" href="Pizzaimages/daynight-logo.svg">
+<link rel="icon" href="Pizzaimages/daynight-favicon.png">
 <link rel="stylesheet" href="assets/fonts/fonts.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="assets/fontawesome/css/all.min.css">
 <style>
 :root{
@@ -193,19 +194,31 @@ footer a:hover{color:var(--gold)}
 .modal-card h3{font-family:'Playfair Display',serif;font-size:1.5rem;margin-bottom:.4rem}
 .modal-card p{color:var(--muted);font-size:.9rem;margin-bottom:1rem}
 .modal-card label{font-size:.75rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.modal-card{max-height:92vh;overflow-y:auto}
+.loc-box{margin:.1rem 0 .9rem}
+.loc-btn{width:100%;justify-content:center}
+.loc-status{font-size:.8rem;color:var(--muted);margin-top:.45rem;line-height:1.45}
+.loc-map{height:220px;border-radius:12px;overflow:hidden;border:1.5px solid var(--line);margin-top:.55rem}
+.loc-map .leaflet-container{height:100%;width:100%}
 .modal-card input,.modal-card textarea,.modal-card select{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:.6rem .75rem;margin:.3rem 0 .9rem;font-family:inherit;font-size:.92rem}
-.toast{position:fixed;bottom:26px;left:50%;transform:translate(-50%,90px);background:var(--forest);color:#fff;font-weight:700;padding:.8rem 1.4rem;border-radius:999px;z-index:120;transition:.35s;box-shadow:var(--shadow);display:flex;gap:.5rem;align-items:center}
+.toast{position:fixed;bottom:26px;left:50%;max-width:92vw;text-align:center;transform:translate(-50%,90px);background:var(--forest);color:#fff;font-weight:700;padding:.8rem 1.4rem;border-radius:999px;z-index:120;transition:.35s;box-shadow:var(--shadow);display:flex;gap:.5rem;align-items:center}
 .toast.show{transform:translate(-50%,0)}
 .toast i{color:var(--gold)}
 .chat-fab{position:fixed;right:22px;bottom:22px;z-index:70;width:56px;height:56px;border-radius:50%;background:var(--green);color:#fff;font-size:1.35rem;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center}
-.chat-panel{position:fixed;right:22px;bottom:88px;z-index:70;width:300px;background:#fff;border-radius:18px;box-shadow:var(--shadow);border:1px solid var(--line);padding:18px;display:none}
+.chat-panel{position:fixed;right:22px;bottom:88px;z-index:70;width:min(300px,92vw);background:#fff;border-radius:18px;box-shadow:var(--shadow);border:1px solid var(--line);padding:18px;display:none}
 .chat-panel.show{display:block}
 .chat-panel h4{font-family:'Playfair Display',serif;margin-bottom:.4rem}
 .chat-panel p{font-size:.85rem;color:var(--muted)}
 
 @media (max-width:900px){
   nav.main-nav{display:none}
+  nav.main-nav.open{display:flex;flex-direction:column;position:absolute;top:72px;left:0;right:0;background:var(--ink);padding:.5rem 5vw 1rem;gap:0;box-shadow:0 18px 30px rgba(0,0,0,.35);z-index:59}
+  nav.main-nav.open a{padding:.75rem 0;border-bottom:1px solid rgba(255,255,255,.08)}
   .burger{display:block}
+  .header-in{gap:1rem}
+  .logo img{height:38px}
+  .order-btn{margin-left:.2rem;padding:.55rem .95rem}
+  .mega-badge{max-width:84%}
   .hero-in{grid-template-columns:1fr;padding:44px 0 54px}
   .hero h1{font-size:2.5rem}
   .hero-visual img{height:300px}
@@ -221,8 +234,7 @@ footer a:hover{color:var(--gold)}
 <header>
   <div class="wrap header-in">
     <a class="logo" href="#home">
-      <img src="Pizzaimages/daynight-logo.svg" alt="Day Night Pizza logo">
-      <span class="logo-text">Day Night Pizza<small>DUNGA BUNGA</small></span>
+      <img src="Pizzaimages/daynight-logo.png" alt="Day Night Pizza — Dunga Bunga">
     </a>
     <button class="burger" id="burger" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
     <nav class="main-nav" id="mainNav">
@@ -369,6 +381,7 @@ footer a:hover{color:var(--gold)}
   <div class="wrap">
     <div class="foot-grid">
       <div>
+        <img src="Pizzaimages/daynight-logo.png" alt="Day Night Pizza" style="height:54px;width:auto;margin-bottom:.8rem">
         <h4>Day Night Pizza — Dunga Bunga</h4>
         <p>Day ho ya night — fresh, loaded pizzas on Main Bazar Thana Road, Dunga Bunga. Dine-in, takeaway and delivery, 7 days a week.</p>
       </div>
@@ -415,7 +428,13 @@ footer a:hover{color:var(--gold)}
       <label for="fBranch">Branch</label>
       <select id="fBranch"></select>
       <label for="fAddr">Delivery address</label>
-      <textarea id="fAddr" rows="2" placeholder="House, street, area, Lahore"></textarea>
+      <textarea id="fAddr" rows="2" placeholder="House, street, area, Dunga Bunga"></textarea>
+      <div class="loc-box">
+        <button type="button" class="btn btn-ghost loc-btn" id="locBtn"><i class="fa-solid fa-location-crosshairs"></i> Use My Live Location</button>
+        <p class="loc-status" id="locStatus">Share your live location so the rider can find you easily — you can also drag the pin on the map to set your exact spot.</p>
+        <div class="loc-map" id="locMapWrap" hidden><div id="locMap" style="height:100%"></div></div>
+        <p style="margin-top:.4rem"><a id="locLink" href="#" target="_blank" rel="noopener" hidden><i class="fa-solid fa-map-location-dot"></i> Open my pin in Google Maps</a></p>
+      </div>
       <label for="fPay">Payment method</label>
       <select id="fPay"><option>Cash on Delivery</option></select>
       <button class="checkout-btn" type="submit">Confirm Order</button>
@@ -659,7 +678,8 @@ document.getElementById("checkoutForm").addEventListener("submit", async e=>{
     mode: document.querySelector(".mode-toggle button.active")?.dataset.mode || "Delivery",
     items: cart.map(c=>({name:c.name, detail:c.detail, price:c.price, qty:c.qty})),
     total,
-    payment_method: document.getElementById("fPay").value
+    payment_method: document.getElementById("fPay").value,
+    notes: window.__dnLoc ? ("Live location: https://maps.google.com/?q=" + window.__dnLoc.lat + "," + window.__dnLoc.lng) : ""
   };
   let orderId = null, sent = false;
   try {
@@ -676,8 +696,8 @@ document.getElementById("checkoutForm").addEventListener("submit", async e=>{
   cart = []; updateCart();
 });
 document.getElementById("megaBtn").addEventListener("click", ()=>{
-  addToCart({name:"Mega Deal — 10% OFF", detail:"Branch #6 exclusive online offer", price:0, img:"Pizzaimages/Slider1.webp"});
-  showToast("Mega Deal applied — 10% OFF at Branch #6");
+  addToCart({name:"Mega Deal — 10% OFF", detail:"Day Night Pizza, Dunga Bunga — exclusive online offer", price:0, img:"Pizzaimages/Slider1.webp"});
+  showToast("Mega Deal applied — 10% OFF at Day Night Pizza");
 });
 
 /* mode toggle + branch label */
@@ -744,14 +764,49 @@ const API_BASE = location.hostname.endsWith("surge.sh") ? "https://daynight-pizz
   } catch(_) { /* built-in data stays */ }
 })();
 
+/* ===== Live location picker (checkout) ===== */
+window.__dnLoc = null;
+let __map = null, __marker = null;
+function setLoc(lat, lng, msg){
+  window.__dnLoc = { lat: +(+lat).toFixed(6), lng: +(+lng).toFixed(6) };
+  const link = document.getElementById("locLink");
+  link.href = "https://maps.google.com/?q=" + window.__dnLoc.lat + "," + window.__dnLoc.lng;
+  link.hidden = false;
+  document.getElementById("locStatus").textContent = msg || "Location set — drag the pin if you want to adjust your exact spot.";
+  showLocMap(window.__dnLoc.lat, window.__dnLoc.lng);
+}
+function showLocMap(lat, lng){
+  const wrap = document.getElementById("locMapWrap");
+  wrap.hidden = false;
+  if (typeof L === "undefined") return; // map library unavailable: coordinates + link still work
+  if (!__map){
+    __map = L.map("locMap").setView([lat, lng], 16);
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "© OpenStreetMap" }).addTo(__map);
+    __marker = L.marker([lat, lng], { draggable: true }).addTo(__map);
+    __marker.on("dragend", ()=>{ const p = __marker.getLatLng(); setLoc(p.lat, p.lng); });
+    __map.on("click", e=>{ __marker.setLatLng(e.latlng); setLoc(e.latlng.lat, e.latlng.lng); });
+  } else {
+    __map.setView([lat, lng], 16); __marker.setLatLng([lat, lng]);
+  }
+  setTimeout(()=>__map && __map.invalidateSize(), 60);
+}
+document.getElementById("locBtn").addEventListener("click", ()=>{
+  const st = document.getElementById("locStatus");
+  if (!navigator.geolocation){ st.textContent = "Live location is not supported on this device — please write your full address above."; return; }
+  st.textContent = "Getting your location…";
+  navigator.geolocation.getCurrentPosition(
+    p=>setLoc(p.coords.latitude, p.coords.longitude, "Live location found — drag the pin to adjust your exact spot."),
+    ()=>{ st.textContent = "Location permission was not given. You can still set a pin on the map:"; showLocMap(29.7333, 73.1359); },
+    { enableHighAccuracy: true, timeout: 12000 });
+});
+
 /* chat widget + mobile nav */
 document.getElementById("chatFab").addEventListener("click", ()=>document.getElementById("chatPanel").classList.toggle("show"));
 document.getElementById("burger").addEventListener("click", ()=>{
-  const n = document.getElementById("mainNav");
-  n.style.display = n.style.display === "flex" ? "" : "flex";
-  n.style.flexDirection = "column"; n.style.position = "absolute"; n.style.top = "72px"; n.style.right = "0";
-  n.style.background = "var(--ink)"; n.style.padding = "1rem 1.4rem"; n.style.gap = "1rem";
+  document.getElementById("mainNav").classList.toggle("open");
 });
+document.querySelectorAll("#mainNav a").forEach(a=>a.addEventListener("click", ()=>document.getElementById("mainNav").classList.remove("open")));
 </script>
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
 </body>
 </html>
