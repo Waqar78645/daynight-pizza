@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <defs>
+    <clipPath id="badgeClip"><circle cx="60" cy="60" r="54"/></clipPath>
+  </defs>
+  <circle cx="60" cy="60" r="58" fill="#17231d"/>
+  <g clip-path="url(#badgeClip)">
+    <!-- night (left) -->
+    <rect x="6" y="6" width="54" height="108" fill="#22355c"/>
+    <!-- day (right) -->
+    <rect x="60" y="6" width="54" height="108" fill="#f7e3ac"/>
+    <!-- crescent moon -->
+    <path d="M45 26a16 16 0 1 0 9 29.6A13 13 0 1 1 45 26z" fill="#d7ad55"/>
+    <!-- star -->
+    <path d="M31 62l1.8 4.2L37 68l-4.2 1.8L31 74l-1.8-4.2L25 68l4.2-1.8z" fill="#ffffff"/>
+    <!-- sun -->
+    <g stroke="#e8a33d" stroke-width="3" stroke-linecap="round">
+      <line x1="85" y1="14" x2="85" y2="20"/>
+      <line x1="68" y1="22" x2="72" y2="26"/>
+      <line x1="102" y1="22" x2="98" y2="26"/>
+      <line x1="64" y1="38" x2="70" y2="38"/>
+      <line x1="106" y1="38" x2="100" y2="38"/>
+    </g>
+    <circle cx="85" cy="38" r="10" fill="#e8a33d"/>
+    <!-- pizza slice -->
+    <path d="M60 110 L43 72 Q60 83 77 72 Z" fill="#e2572b"/>
+    <path d="M43 72 Q60 83 77 72 L74.6 65.8 Q60 75.6 45.4 65.8 Z" fill="#d7ad55"/>
+    <circle cx="57" cy="82" r="3.4" fill="#a91117"/>
+    <circle cx="66" cy="92" r="3.4" fill="#a91117"/>
+    <circle cx="55" cy="97" r="3" fill="#a91117"/>
+  </g>
+  <circle cx="60" cy="60" r="54" fill="none" stroke="#d7ad55" stroke-width="3"/>
+</svg>
