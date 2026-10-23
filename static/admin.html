@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day Night Pizza — Admin Panel</title>
+<link rel="icon" href="Pizzaimages/daynight-logo.svg">
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<link rel="stylesheet" href="assets/fontawesome/css/all.min.css">
+<style>
+:root{--green:#087443;--green-deep:#0f672f;--forest:#17231d;--forest-2:#173c2b;--ink:#181513;--gold:#d7ad55;--red:#a91117;--cream:#fff8ec;--paper:#fffdf7;--line:#e2eaf0;--muted:#5d6d64}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:#f4f6f3;color:var(--forest)}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit;font-size:.92rem;border:1.5px solid var(--line);border-radius:10px;padding:.55rem .7rem;width:100%;background:#fff}
+label{font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:block;margin:.7rem 0 .3rem}
+.btn{background:var(--green);color:#fff;border:none;font-weight:800;border-radius:999px;padding:.6rem 1.3rem}
+.btn:hover{background:var(--green-deep)}
+.btn.dark{background:var(--forest)} .btn.red{background:var(--red)} .btn.gold{background:var(--gold);color:var(--ink)}
+.btn.sm{padding:.35rem .9rem;font-size:.8rem}
+/* login */
+#loginView{min-height:100dvh;display:flex;align-items:center;justify-content:center;background:var(--forest);padding:20px}
+.login-card{background:#fff;border-radius:22px;padding:36px;max-width:380px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,.35)}
+.login-card img{height:56px;margin-bottom:10px}
+.login-card h1{font-family:'Playfair Display',serif;font-size:1.7rem}
+.login-card p{color:var(--muted);font-size:.9rem;margin:.3rem 0 1rem}
+.err{color:var(--red);font-size:.85rem;font-weight:700;min-height:1.2em}
+/* layout */
+#appView{display:none;min-height:100dvh;grid-template-columns:230px 1fr}
+aside{background:var(--ink);color:#e9e4da;padding:22px 0;position:sticky;top:0;height:100dvh;display:flex;flex-direction:column}
+aside .brand{padding:0 20px 18px;border-bottom:1px solid rgba(255,255,255,.12);display:flex;gap:.6rem;align-items:center}
+aside .brand img{height:38px}
+aside .brand b{font-family:'Playfair Display',serif;color:#fff}
+aside nav{padding:14px 10px;display:flex;flex-direction:column;gap:4px}
+aside nav button{background:none;border:none;color:#cfc9bd;text-align:left;font-weight:700;font-size:.92rem;padding:.65rem .8rem;border-radius:10px;display:flex;gap:.6rem;align-items:center}
+aside nav button:hover{background:rgba(255,255,255,.08);color:#fff}
+aside nav button.active{background:var(--green);color:#fff}
+aside .logout{margin-top:auto;padding:0 10px}
+main{padding:26px 30px;overflow-x:auto}
+main h2{font-family:'Playfair Display',serif;font-size:1.8rem;margin-bottom:.2rem}
+main .sub{color:var(--muted);margin-bottom:1.2rem;font-size:.92rem}
+.tab{display:none}.tab.show{display:block}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:22px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px}
+.stat b{font-family:'Playfair Display',serif;font-size:1.9rem;display:block}
+.stat span{color:var(--muted);font-size:.82rem;font-weight:700}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;font-size:.88rem}
+th{background:var(--forest);color:#fff;text-align:left;padding:.65rem .8rem;font-size:.75rem;letter-spacing:.05em;text-transform:uppercase}
+td{padding:.6rem .8rem;border-top:1px solid var(--line);vertical-align:middle}
+td img{width:44px;height:44px;border-radius:8px;object-fit:cover}
+.pill{font-size:.7rem;font-weight:800;padding:.25rem .6rem;border-radius:999px;background:#eef3ee;color:var(--forest-2);white-space:nowrap}
+.pill.on{background:#e4f8ec;color:var(--green-deep)} .pill.off{background:#fdecec;color:var(--red)}
+.pill.st-Pending{background:#fff3d6;color:#8a6100}.pill.st-Delivered{background:#e4f8ec;color:var(--green-deep)}.pill.st-Cancelled{background:#fdecec;color:var(--red)}
+.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:20px}
+.panel h3{font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:.4rem}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 18px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 18px}}
+.row-actions{display:flex;gap:.4rem}
+.icon-btn{border:1.5px solid var(--line);background:#fff;border-radius:8px;width:32px;height:32px;font-size:.8rem}
+.icon-btn:hover{border-color:var(--green);color:var(--green-deep)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,80px);background:var(--forest);color:#fff;font-weight:700;padding:.7rem 1.3rem;border-radius:999px;transition:.3s;z-index:50}
+.toast.show{transform:translate(-50%,0)}
+.note{background:var(--cream);border:1px solid #f0dfae;border-radius:12px;padding:.8rem 1rem;font-size:.85rem;margin:.8rem 0}
+@media(max-width:860px){#appView{grid-template-columns:1fr}aside{position:static;height:auto}.grid2,.grid3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- ================= LOGIN ================= -->
+<div id="loginView">
+  <form class="login-card" id="loginForm">
+    <img src="Pizzaimages/daynight-logo.svg" alt="Day Night Pizza">
+    <h1>Admin Panel</h1>
+    <p>Day Night Pizza, Dunga Bunga — manage menu, deals, orders &amp; payments.</p>
+    <label>Username</label>
+    <input id="loginUser" autocomplete="username" value="admin">
+    <label>Password</label>
+    <input id="loginPass" type="password" autocomplete="current-password" placeholder="••••••••">
+    <p class="err" id="loginErr"></p>
+    <button class="btn" style="width:100%" type="submit"><i class="fa-solid fa-right-to-bracket"></i> Log in</button>
+    <p style="margin-top:.8rem;font-size:.78rem">Default: <b>admin / pizzaadmin</b> — change it after first login (Settings tab).</p>
+  </form>
+</div>
+
+<!-- ================= APP ================= -->
+<div id="appView">
+  <aside>
+    <div class="brand"><img src="Pizzaimages/daynight-logo.svg" alt=""><b>Day Night Pizza<br><small style="font-family:'Plus Jakarta Sans';font-size:.62rem;letter-spacing:.25em;color:var(--gold)">ADMIN</small></b></div>
+    <nav id="tabs">
+      <button data-tab="dashboard" class="active"><i class="fa-solid fa-gauge"></i> Dashboard</button>
+      <button data-tab="products"><i class="fa-solid fa-pizza-slice"></i> Products</button>
+      <button data-tab="deals"><i class="fa-solid fa-tags"></i> Deals</button>
+      <button data-tab="branches"><i class="fa-solid fa-store"></i> Branches</button>
+      <button data-tab="orders"><i class="fa-solid fa-receipt"></i> Orders</button>
+      <button data-tab="payments"><i class="fa-solid fa-credit-card"></i> Payments</button>
+      <button data-tab="settings"><i class="fa-solid fa-gear"></i> Settings</button>
+    </nav>
+    <div class="logout">
+      <button class="btn dark" id="viewSite" style="width:100%;margin-bottom:.5rem"><i class="fa-solid fa-globe"></i> View Website</button>
+      <button class="btn red" id="logoutBtn" style="width:100%"><i class="fa-solid fa-right-from-bracket"></i> Log out</button>
+    </div>
+  </aside>
+
+  <main>
+    <!-- DASHBOARD -->
+    <section class="tab show" id="tab-dashboard">
+      <h2>Dashboard</h2>
+      <p class="sub">Your store at a glance.</p>
+      <div class="cards">
+        <div class="stat"><b id="stOrders">–</b><span>Total orders</span></div>
+        <div class="stat"><b id="stRevenue">–</b><span>Revenue (Rs.)</span></div>
+        <div class="stat"><b id="stPending">–</b><span>Pending orders</span></div>
+        <div class="stat"><b id="stProducts">–</b><span>Products</span></div>
+      </div>
+      <div class="panel">
+        <h3>Recent orders</h3>
+        <div id="recentOrders"></div>
+      </div>
+    </section>
+
+    <!-- PRODUCTS -->
+    <section class="tab" id="tab-products">
+      <h2>Products</h2>
+      <p class="sub">Add, edit or remove pizzas. Changes appear on the website immediately.</p>
+      <div class="panel">
+        <h3 id="prodFormTitle">Add a product</h3>
+        <form id="prodForm">
+          <input type="hidden" id="pId">
+          <div class="grid2">
+            <div><label>Name</label><input id="pName" required placeholder="e.g. Zinger Pizza"></div>
+            <div><label>Tagline</label><input id="pTag" placeholder="Short tasty description"></div>
+          </div>
+          <div class="grid3">
+            <div><label>Small price (Rs.) — optional</label><input id="pSmall" type="number" min="0" placeholder="230"></div>
+            <div><label>Medium price (Rs.)</label><input id="pMed" type="number" min="0" placeholder="420"></div>
+            <div><label>Large price (Rs.)</label><input id="pLarge" type="number" min="0" placeholder="680"></div>
+          </div>
+          <label>Product image</label>
+          <div style="display:flex;gap:.6rem;align-items:center;flex-wrap:wrap">
+            <input id="pImage" placeholder="Pizzaimages/Fajitapizza.png" style="flex:1;min-width:220px">
+            <input type="file" id="pFile" accept="image/*" style="width:auto;border:none;padding:0">
+            <button type="button" class="btn sm gold" id="pUploadBtn"><i class="fa-solid fa-upload"></i> Upload</button>
+          </div>
+          <div style="display:flex;gap:1.4rem;margin-top:.9rem;align-items:center;flex-wrap:wrap">
+            <label style="margin:0;display:flex;gap:.4rem;align-items:center;text-transform:none;letter-spacing:0;font-size:.88rem"><input type="checkbox" id="pBest" style="width:auto"> Best seller ★</label>
+            <label style="margin:0;display:flex;gap:.4rem;align-items:center;text-transform:none;letter-spacing:0;font-size:.88rem"><input type="checkbox" id="pActive" checked style="width:auto"> Visible on website</label>
+            <button class="btn" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save product</button>
+            <button class="btn dark" type="button" id="pReset">Clear</button>
+          </div>
+        </form>
+      </div>
+      <div id="prodTable"></div>
+    </section>
+
+    <!-- DEALS -->
+    <section class="tab" id="tab-deals">
+      <h2>Deals</h2>
+      <p class="sub">Combo deals shown on the website's Deals section.</p>
+      <div class="panel">
+        <h3 id="dealFormTitle">Add a deal</h3>
+        <form id="dealForm">
+          <input type="hidden" id="dId">
+          <div class="grid3">
+            <div><label>Badge (emoji + text)</label><input id="dBadge" placeholder="🔥 DEAL 5"></div>
+            <div><label>Name</label><input id="dName" required placeholder="Family Night Deal"></div>
+            <div><label>Price (Rs.)</label><input id="dPrice" type="number" min="0" required placeholder="1999"></div>
+          </div>
+          <label>Description</label>
+          <input id="dDesc" placeholder="What is included in this deal?">
+          <label>Fixed contents (optional — e.g. "Large Tikka Pizza + Large Fajita Pizza")</label>
+          <input id="dFixed" placeholder="">
+          <label style="margin-top:.9rem;display:flex;gap:.4rem;align-items:center;text-transform:none;letter-spacing:0;font-size:.88rem"><input type="checkbox" id="dActive" checked style="width:auto"> Visible on website</label>
+          <p style="margin-top:.8rem"><button class="btn" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save deal</button>
+          <button class="btn dark" type="button" id="dReset">Clear</button></p>
+        </form>
+      </div>
+      <div id="dealTable"></div>
+    </section>
+
+    <!-- BRANCHES -->
+    <section class="tab" id="tab-branches">
+      <h2>Branches</h2>
+      <p class="sub">Branch cards, phone numbers and opening hours (open/closed status is calculated from these hours).</p>
+      <div class="panel">
+        <h3 id="branchFormTitle">Add a branch</h3>
+        <form id="branchForm">
+          <input type="hidden" id="bId">
+          <div class="grid2">
+            <div><label>Branch name</label><input id="bName" required placeholder="Branch #7"></div>
+            <div><label>Short address</label><input id="bShort" placeholder="Main Boulevard, Gulberg"></div>
+          </div>
+          <label>Full address</label>
+          <input id="bAddr" placeholder="Street, area, Lahore">
+          <div class="grid3">
+            <div><label>Phone</label><input id="bPhone" placeholder="03xx-xxxxxxx"></div>
+            <div><label>Opens (24h)</label><input id="bOpen" type="number" min="0" max="23" value="12"></div>
+            <div><label>Closes (24h)</label><input id="bClose" type="number" min="0" max="23" value="4"></div>
+          </div>
+          <label>Timing text (shown on site)</label>
+          <input id="bTiming" placeholder="12 PM to 4 AM">
+          <label style="margin-top:.9rem;display:flex;gap:.4rem;align-items:center;text-transform:none;letter-spacing:0;font-size:.88rem"><input type="checkbox" id="bActive" checked style="width:auto"> Visible on website</label>
+          <p style="margin-top:.8rem"><button class="btn" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save branch</button>
+          <button class="btn dark" type="button" id="bReset">Clear</button></p>
+        </form>
+      </div>
+      <div id="branchTable"></div>
+    </section>
+
+    <!-- ORDERS -->
+    <section class="tab" id="tab-orders">
+      <h2>Orders</h2>
+      <p class="sub">Every order placed on the website lands here. Update the status as you prepare and deliver.</p>
+      <div id="orderTable"></div>
+    </section>
+
+    <!-- PAYMENTS -->
+    <section class="tab" id="tab-payments">
+      <h2>Payment Gateway</h2>
+      <p class="sub">Connect a payment provider so customers can pay online at checkout.</p>
+      <div class="panel">
+        <h3>Gateway settings</h3>
+        <form id="payForm">
+          <div class="grid2">
+            <div><label>Provider</label>
+              <select id="payProvider">
+                <option value="none">None — Cash on Delivery only</option>
+                <option value="stripe">Stripe (cards)</option>
+                <option value="jazzcash">JazzCash</option>
+                <option value="easypaisa">EasyPaisa</option>
+              </select>
+            </div>
+            <div><label>Currency</label><input id="payCurrency" value="PKR"></div>
+          </div>
+          <div class="grid2">
+            <div><label>Public key / Merchant ID</label><input id="payPublic" placeholder="pk_test_… or merchant id"></div>
+            <div><label>Secret key / Password</label><input id="paySecret" type="password" placeholder="Leave blank to keep the saved one"></div>
+          </div>
+          <div style="display:flex;gap:1.4rem;margin-top:.9rem;flex-wrap:wrap">
+            <label style="margin:0;display:flex;gap:.4rem;align-items:center;text-transform:none;letter-spacing:0;font-size:.88rem"><input type="checkbox" id="payEnabled" style="width:auto"> Enable online payments at checkout</label>
+            <label style="margin:0;display:flex;gap:.4rem;align-items:center;text-transform:none;letter-spacing:0;font-size:.88rem"><input type="checkbox" id="payTest" checked style="width:auto"> Test mode</label>
+          </div>
+          <p style="margin-top:1rem"><button class="btn" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save payment settings</button></p>
+        </form>
+        <div class="note"><b>How it works:</b> the secret key is stored only on the server and is never sent to the website. When a provider is enabled, checkout shows it next to Cash on Delivery. Until you paste <b>live</b> keys and switch off test mode, gateway payments run in <b>demo mode</b> — the order is recorded as "Gateway (demo — not charged)" and no real money moves. Going fully live also needs the provider's hosted payment page/redirect to be wired with your merchant account — keep the keys here and that final hookup is a small step.</div>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="tab" id="tab-settings">
+      <h2>Website Settings</h2>
+      <p class="sub">Texts that appear on the homepage — controlled from here.</p>
+      <div class="panel">
+        <h3>Homepage content</h3>
+        <form id="siteForm">
+          <label>Store name</label>
+          <input id="sStore">
+          <label>Hero headline (HTML allowed, e.g. &lt;em&gt;…&lt;/em&gt;)</label>
+          <input id="sHeroTitle">
+          <label>Hero text</label>
+          <textarea id="sHeroLead" rows="3"></textarea>
+          <label>Mega Deal banner title</label>
+          <input id="sMegaTitle">
+          <label>Mega Deal banner text</label>
+          <input id="sMegaText">
+          <p style="margin-top:1rem"><button class="btn" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save website settings</button></p>
+        </form>
+      </div>
+      <div class="panel">
+        <h3>Change admin password</h3>
+        <form id="passForm">
+          <div class="grid2">
+            <div><label>Current password</label><input id="pwCur" type="password"></div>
+            <div><label>New password (min 6 characters)</label><input id="pwNew" type="password"></div>
+          </div>
+          <p style="margin-top:1rem"><button class="btn gold" type="submit"><i class="fa-solid fa-key"></i> Change password</button></p>
+        </form>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="toast" id="toast">Saved</div>
+
+<script>
+const $ = id => document.getElementById(id);
+let token = localStorage.getItem("pw_admin_token") || "";
+
+async function api(path, opts = {}){
+  const res = await fetch(path, { ...opts, headers: { "Content-Type": "application/json",
+    ...(token ? { Authorization: "Bearer " + token } : {}), ...(opts.headers || {}) } });
+  if (res.status === 401 && token){ logout(); throw new Error("Session expired — log in again"); }
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.detail || "Request failed");
+  return data;
+}
+let toastTimer;
+function toast(msg){ const t = $("toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 2200); }
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
+
+/* ---------- auth ---------- */
+function showApp(){ $("loginView").style.display = "none"; $("appView").style.display = "grid"; loadAll(); }
+function logout(){ token = ""; localStorage.removeItem("pw_admin_token");
+  $("appView").style.display = "none"; $("loginView").style.display = "flex"; }
+$("loginForm").addEventListener("submit", async e => {
+  e.preventDefault(); $("loginErr").textContent = "";
+  try {
+    const r = await fetch("/api/admin/login", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: $("loginUser").value.trim(), password: $("loginPass").value }) });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.detail || "Login failed");
+    token = d.token; localStorage.setItem("pw_admin_token", token); showApp();
+  } catch (err) { $("loginErr").textContent = err.message; }
+});
+$("logoutBtn").addEventListener("click", () => { api("/api/admin/logout", { method: "POST" }).catch(() => {}); logout(); });
+$("viewSite").addEventListener("click", () => window.open("/", "_blank"));
+
+/* ---------- tabs ---------- */
+document.querySelectorAll("#tabs button").forEach(b => b.addEventListener("click", () => {
+  document.querySelectorAll("#tabs button").forEach(x => x.classList.remove("active"));
+  b.classList.add("active");
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("show"));
+  $("tab-" + b.dataset.tab).classList.add("show");
+  if (b.dataset.tab === "dashboard") loadStats();
+  if (b.dataset.tab === "orders") loadOrders();
+}));
+
+/* ---------- dashboard ---------- */
+async function loadStats(){
+  const s = await api("/api/admin/stats");
+  $("stOrders").textContent = s.total_orders;
+  $("stRevenue").textContent = "Rs. " + Number(s.revenue).toLocaleString();
+  $("stPending").textContent = s.pending;
+  $("stProducts").textContent = s.products;
+  $("recentOrders").innerHTML = s.recent_orders.length ? orderTableHTML(s.recent_orders, false)
+    : "<p style='color:var(--muted)'>No orders yet — they will appear here as customers order.</p>";
+}
+function itemsText(items){ return items.map(i => `${i.qty} × ${i.name} (${i.detail})`).join(", "); }
+function orderTableHTML(list, withActions = true){
+  return `<table><tr><th>#</th><th>When</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th>${withActions ? "<th></th>" : ""}</tr>`
+    + list.map(o => `<tr>
+      <td><b>#${o.id}</b></td>
+      <td style="white-space:nowrap">${esc(o.created_at).slice(0,16)} UTC</td>
+      <td><b>${esc(o.customer_name)}</b><br><small>${esc(o.phone)} · ${esc(o.mode)}<br>${esc(o.branch)}</small></td>
+      <td style="max-width:300px">${esc(itemsText(o.items))}<br><small>${esc(o.address)}</small></td>
+      <td><b>Rs. ${Number(o.total).toLocaleString()}</b></td>
+      <td><small>${esc(o.payment_method)}<br>${esc(o.payment_status)}</small></td>
+      <td>${withActions
+        ? `<select onchange="setStatus(${o.id}, this.value)" style="width:auto;padding:.35rem .5rem">${["Pending","Confirmed","Preparing","On the way","Delivered","Cancelled"].map(st => `<option ${st === o.status ? "selected" : ""}>${st}</option>`).join("")}</select>`
+        : `<span class="pill st-${o.status}">${esc(o.status)}</span>`}</td>
+      ${withActions ? `<td><button class="icon-btn" title="Delete" onclick="delOrder(${o.id})"><i class="fa-solid fa-trash"></i></button></td>` : ""}
+    </tr>`).join("") + "</table>";
+}
+async function loadOrders(){ const list = await api("/api/admin/orders");
+  $("orderTable").innerHTML = list.length ? orderTableHTML(list) : "<p style='color:var(--muted)'>No orders yet.</p>"; }
+async function setStatus(id, status){ await api(`/api/admin/orders/${id}/status`, { method: "PUT", body: JSON.stringify({ status }) }); toast("Order #" + id + " → " + status); }
+async function delOrder(id){ if (!confirm("Delete order #" + id + "?")) return;
+  await api(`/api/admin/orders/${id}`, { method: "DELETE" }); toast("Order deleted"); loadOrders(); loadStats(); }
+
+/* ---------- products ---------- */
+let products = [];
+async function loadProducts(){
+  products = await api("/api/admin/products");
+  $("prodTable").innerHTML = `<table><tr><th></th><th>Name</th><th>Prices (S/M/L)</th><th>Best</th><th>Visible</th><th></th></tr>`
+    + products.map(p => `<tr>
+      <td><img src="${esc(p.image)}" alt=""></td>
+      <td><b>${esc(p.name)}</b><br><small>${esc(p.tagline)}</small></td>
+      <td>${p.prices.map(x => "Rs. " + x).join(" / ")}</td>
+      <td>${p.best_seller ? "★" : "—"}</td>
+      <td><span class="pill ${p.active ? "on" : "off"}">${p.active ? "Visible" : "Hidden"}</span></td>
+      <td><div class="row-actions">
+        <button class="icon-btn" onclick="editProduct(${p.id})"><i class="fa-solid fa-pen"></i></button>
+        <button class="icon-btn" onclick="delProduct(${p.id})"><i class="fa-solid fa-trash"></i></button>
+      </div></td></tr>`).join("") + "</table>";
+}
+function productPrices(){
+  const s = $("pSmall").value, m = $("pMed").value, l = $("pLarge").value;
+  const arr = [s, m, l].filter(v => v !== "").map(Number);
+  return arr;
+}
+$("prodForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const prices = productPrices();
+  if (prices.length < 2) { toast("Give at least two prices (e.g. Medium + Large)"); return; }
+  const body = { name: $("pName").value.trim(), tagline: $("pTag").value.trim(), image: $("pImage").value.trim(),
+    prices, best_seller: $("pBest").checked, active: $("pActive").checked };
+  const id = $("pId").value;
+  await api(id ? `/api/admin/products/${id}` : "/api/admin/products",
+    { method: id ? "PUT" : "POST", body: JSON.stringify(body) });
+  toast("Product saved"); resetProductForm(); loadProducts(); loadStats();
+});
+function editProduct(id){
+  const p = products.find(x => x.id === id); if (!p) return;
+  $("pId").value = p.id; $("pName").value = p.name; $("pTag").value = p.tagline; $("pImage").value = p.image;
+  const pr = p.prices;
+  $("pSmall").value = pr.length === 3 ? pr[0] : ""; $("pMed").value = pr.length === 3 ? pr[1] : pr[0];
+  $("pLarge").value = pr.length === 3 ? pr[2] : pr[1];
+  $("pBest").checked = !!p.best_seller; $("pActive").checked = !!p.active;
+  $("prodFormTitle").textContent = "Edit product — " + p.name;
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+async function delProduct(id){ if (!confirm("Delete this product?")) return;
+  await api(`/api/admin/products/${id}`, { method: "DELETE" }); toast("Product deleted"); loadProducts(); }
+function resetProductForm(){ $("prodForm").reset(); $("pId").value = ""; $("pActive").checked = true;
+  $("prodFormTitle").textContent = "Add a product"; }
+$("pReset").addEventListener("click", resetProductForm);
+$("pUploadBtn").addEventListener("click", async () => {
+  const f = $("pFile").files[0];
+  if (!f) { toast("Choose an image file first"); return; }
+  const fd = new FormData(); fd.append("file", f);
+  const res = await fetch("/api/admin/upload", { method: "POST",
+    headers: { Authorization: "Bearer " + token }, body: fd });
+  const d = await res.json();
+  if (!res.ok) { toast(d.detail || "Upload failed"); return; }
+  $("pImage").value = d.path; toast("Image uploaded");
+});
+
+/* ---------- deals ---------- */
+let deals = [];
+async function loadDeals(){
+  deals = await api("/api/admin/deals");
+  $("dealTable").innerHTML = `<table><tr><th>Badge</th><th>Name</th><th>Price</th><th>Visible</th><th></th></tr>`
+    + deals.map(d => `<tr><td>${esc(d.badge)}</td><td><b>${esc(d.name)}</b><br><small>${esc(d.description)}</small></td>
+      <td><b>Rs. ${Number(d.price).toLocaleString()}</b></td>
+      <td><span class="pill ${d.active ? "on" : "off"}">${d.active ? "Visible" : "Hidden"}</span></td>
+      <td><div class="row-actions">
+        <button class="icon-btn" onclick="editDeal(${d.id})"><i class="fa-solid fa-pen"></i></button>
+        <button class="icon-btn" onclick="delDeal(${d.id})"><i class="fa-solid fa-trash"></i></button>
+      </div></td></tr>`).join("") + "</table>";
+}
+$("dealForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const old = deals.find(x => x.id == $("dId").value) || {};
+  const body = { badge: $("dBadge").value.trim(), name: $("dName").value.trim(), description: $("dDesc").value.trim(),
+    price: Number($("dPrice").value), fixed: $("dFixed").value.trim(), active: $("dActive").checked,
+    visual: old.visual || [], selects: old.selects || [] };
+  const id = $("dId").value;
+  await api(id ? `/api/admin/deals/${id}` : "/api/admin/deals", { method: id ? "PUT" : "POST", body: JSON.stringify(body) });
+  toast("Deal saved"); resetDealForm(); loadDeals();
+});
+function editDeal(id){ const d = deals.find(x => x.id === id); if (!d) return;
+  $("dId").value = d.id; $("dBadge").value = d.badge; $("dName").value = d.name; $("dDesc").value = d.description;
+  $("dPrice").value = d.price; $("dFixed").value = d.fixed || ""; $("dActive").checked = !!d.active;
+  $("dealFormTitle").textContent = "Edit deal — " + d.name; window.scrollTo({ top: 0, behavior: "smooth" }); }
+async function delDeal(id){ if (!confirm("Delete this deal?")) return;
+  await api(`/api/admin/deals/${id}`, { method: "DELETE" }); toast("Deal deleted"); loadDeals(); }
+function resetDealForm(){ $("dealForm").reset(); $("dId").value = ""; $("dActive").checked = true;
+  $("dealFormTitle").textContent = "Add a deal"; }
+$("dReset").addEventListener("click", resetDealForm);
+
+/* ---------- branches ---------- */
+let branches = [];
+async function loadBranches(){
+  branches = await api("/api/admin/branches");
+  $("branchTable").innerHTML = `<table><tr><th>Branch</th><th>Phone</th><th>Hours</th><th>Visible</th><th></th></tr>`
+    + branches.map(b => `<tr><td><b>${esc(b.name)}</b><br><small>${esc(b.short_address)}</small></td>
+      <td>${esc(b.phone)}</td><td>${esc(b.timing)}<br><small>${b.open_hour}:00 → ${b.close_hour}:00</small></td>
+      <td><span class="pill ${b.active ? "on" : "off"}">${b.active ? "Visible" : "Hidden"}</span></td>
+      <td><div class="row-actions">
+        <button class="icon-btn" onclick="editBranch(${b.id})"><i class="fa-solid fa-pen"></i></button>
+        <button class="icon-btn" onclick="delBranch(${b.id})"><i class="fa-solid fa-trash"></i></button>
+      </div></td></tr>`).join("") + "</table>";
+}
+$("branchForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const body = { name: $("bName").value.trim(), short_address: $("bShort").value.trim(), address: $("bAddr").value.trim(),
+    phone: $("bPhone").value.trim(), timing: $("bTiming").value.trim(),
+    open_hour: Number($("bOpen").value), close_hour: Number($("bClose").value), active: $("bActive").checked };
+  const id = $("bId").value;
+  await api(id ? `/api/admin/branches/${id}` : "/api/admin/branches", { method: id ? "PUT" : "POST", body: JSON.stringify(body) });
+  toast("Branch saved"); resetBranchForm(); loadBranches();
+});
+function editBranch(id){ const b = branches.find(x => x.id === id); if (!b) return;
+  $("bId").value = b.id; $("bName").value = b.name; $("bShort").value = b.short_address; $("bAddr").value = b.address;
+  $("bPhone").value = b.phone; $("bTiming").value = b.timing; $("bOpen").value = b.open_hour; $("bClose").value = b.close_hour;
+  $("bActive").checked = !!b.active; $("branchFormTitle").textContent = "Edit branch — " + b.name;
+  window.scrollTo({ top: 0, behavior: "smooth" }); }
+async function delBranch(id){ if (!confirm("Delete this branch?")) return;
+  await api(`/api/admin/branches/${id}`, { method: "DELETE" }); toast("Branch deleted"); loadBranches(); }
+function resetBranchForm(){ $("branchForm").reset(); $("bId").value = ""; $("bActive").checked = true;
+  $("bOpen").value = 12; $("bClose").value = 4; $("branchFormTitle").textContent = "Add a branch"; }
+$("bReset").addEventListener("click", resetBranchForm);
+
+/* ---------- payments + site settings ---------- */
+async function loadSettings(){
+  const s = await api("/api/admin/settings");
+  $("sStore").value = s.store_name || ""; $("sHeroTitle").value = s.hero_title || "";
+  $("sHeroLead").value = s.hero_lead || ""; $("sMegaTitle").value = s.mega_title || ""; $("sMegaText").value = s.mega_text || "";
+  $("payProvider").value = s.pay_provider || "none"; $("payCurrency").value = s.pay_currency || "PKR";
+  $("payPublic").value = s.pay_public_key || ""; $("payEnabled").checked = s.pay_enabled === "1";
+  $("payTest").checked = s.pay_test_mode === "1";
+  $("paySecret").placeholder = s.pay_secret_key_set ? "Saved on server — leave blank to keep it" : "sk_… / gateway secret";
+}
+$("payForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const values = { pay_provider: $("payProvider").value, pay_currency: $("payCurrency").value.trim(),
+    pay_public_key: $("payPublic").value.trim(), pay_enabled: $("payEnabled").checked ? "1" : "0",
+    pay_test_mode: $("payTest").checked ? "1" : "0" };
+  if ($("paySecret").value.trim()) values.pay_secret_key = $("paySecret").value.trim();
+  await api("/api/admin/settings", { method: "PUT", body: JSON.stringify({ values }) });
+  $("paySecret").value = ""; toast("Payment settings saved"); loadSettings();
+});
+$("siteForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const values = { store_name: $("sStore").value, hero_title: $("sHeroTitle").value, hero_lead: $("sHeroLead").value,
+    mega_title: $("sMegaTitle").value, mega_text: $("sMegaText").value };
+  await api("/api/admin/settings", { method: "PUT", body: JSON.stringify({ values }) });
+  toast("Website settings saved");
+});
+$("passForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  try {
+    await api("/api/admin/change-password", { method: "POST",
+      body: JSON.stringify({ current: $("pwCur").value, new: $("pwNew").value }) });
+    $("passForm").reset(); toast("Password changed");
+  } catch (err) { toast(err.message); }
+});
+
+/* ---------- boot ---------- */
+function loadAll(){ loadStats(); loadProducts(); loadDeals(); loadBranches(); loadOrders(); loadSettings(); }
+if (token) { showApp(); }
+</script>
+</body>
+</html>

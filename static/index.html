@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day Night Pizza — Dunga Bunga | Pizza Delivery & Dine-In</title>
+<link rel="icon" href="Pizzaimages/daynight-logo.svg">
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<link rel="stylesheet" href="assets/fontawesome/css/all.min.css">
+<style>
+:root{
+  --green:#087443; --green-deep:#0f672f; --forest:#17231d; --forest-2:#173c2b; --forest-3:#123f2b;
+  --ink:#181513; --gold:#d7ad55; --red:#a91117; --tomato:#b64a2e;
+  --cream:#fff8ec; --paper:#fffdf7; --flour:#fffaf0; --line:#e2eaf0; --muted:#5d6d64;
+  --shadow:0 10px 30px rgba(23,35,29,.12); --radius:18px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--paper);color:var(--forest);line-height:1.55}
+img{max-width:100%;display:block}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+.wrap{max-width:1200px;margin:0 auto;padding:0 20px}
+.display{font-family:'Playfair Display',Georgia,serif}
+.eyebrow{letter-spacing:.22em;font-size:.72rem;font-weight:800;text-transform:uppercase;color:var(--green)}
+.section{padding:84px 0}
+.section-head{text-align:center;max-width:640px;margin:0 auto 44px}
+.section-head h2{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:800;margin:.35rem 0 .5rem}
+.section-head p{color:var(--muted)}
+.btn{display:inline-flex;align-items:center;gap:.55rem;font-weight:700;border-radius:999px;padding:.8rem 1.6rem;transition:.2s;font-size:.95rem}
+.btn-green{background:var(--green);color:#fff}
+.btn-green:hover{background:var(--green-deep);transform:translateY(-2px)}
+.btn-gold{background:var(--gold);color:var(--ink)}
+.btn-gold:hover{transform:translateY(-2px)}
+.btn-ghost{border:2px solid var(--forest);color:var(--forest)}
+.btn-ghost:hover{background:var(--forest);color:#fff}
+
+/* ---------- Header (dark editorial nav, #181513) ---------- */
+header{position:sticky;top:0;z-index:60;background:var(--ink);color:#fff;box-shadow:0 4px 24px rgba(0,0,0,.35)}
+.header-in{display:flex;align-items:center;gap:2rem;height:72px}
+.logo{display:flex;align-items:center;gap:.7rem;font-weight:800}
+.logo img{height:46px;width:auto}
+.logo .logo-text{font-family:'Playfair Display',serif;font-size:1.25rem;line-height:1.05}
+.logo .logo-text small{display:block;font-family:'Plus Jakarta Sans',sans-serif;font-size:.6rem;letter-spacing:.3em;color:var(--gold);font-weight:700}
+nav.main-nav{display:flex;gap:1.7rem;margin-left:auto}
+nav.main-nav a{font-weight:600;font-size:.93rem;color:#e9e4da;position:relative;padding:.3rem 0}
+nav.main-nav a::after{content:"";position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--gold);transition:.25s}
+nav.main-nav a:hover{color:#fff}
+nav.main-nav a:hover::after{width:100%}
+.order-btn{margin-left:1.4rem;background:var(--green);color:#fff;font-weight:800;border-radius:999px;padding:.6rem 1.2rem;display:flex;align-items:center;gap:.5rem}
+.order-btn:hover{background:var(--green-deep)}
+.order-btn .count{background:var(--gold);color:var(--ink);border-radius:999px;min-width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;font-size:.8rem;padding:0 .3rem}
+.burger{display:none;margin-left:auto;color:#fff;font-size:1.3rem}
+
+/* ---------- Order mode bar ---------- */
+.order-mode-bar{background:var(--forest-2);color:#eaf3ec;padding:.7rem 0;font-size:.9rem}
+.mode-in{display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap}
+.mode-toggle{display:flex;background:rgba(255,255,255,.1);border-radius:999px;padding:4px}
+.mode-toggle button{padding:.42rem 1.1rem;border-radius:999px;color:#eaf3ec;font-weight:700;font-size:.85rem}
+.mode-toggle button.active{background:var(--gold);color:var(--ink)}
+.mode-status{margin-left:auto;display:flex;align-items:center;gap:.5rem;font-weight:600}
+.dot{width:9px;height:9px;border-radius:50%;background:#39d353;box-shadow:0 0 0 4px rgba(57,211,83,.2)}
+.dot.closed{background:#e5534b;box-shadow:0 0 0 4px rgba(229,83,75,.2)}
+
+/* ---------- Hero (cream #fff8ec) ---------- */
+.hero{background:var(--cream);overflow:hidden}
+.hero-in{display:grid;grid-template-columns:1.05fr .95fr;gap:3rem;align-items:center;padding:64px 0 72px}
+.hero h1{font-family:'Playfair Display',serif;font-size:3.4rem;line-height:1.06;font-weight:800}
+.hero h1 em{color:var(--green);font-style:italic}
+.hero p.lead{margin:1.1rem 0 1.6rem;color:#46564c;font-size:1.06rem;max-width:480px}
+.hero-cta{display:flex;gap:.9rem;flex-wrap:wrap}
+.hero-points{display:flex;gap:1.6rem;margin-top:2rem;flex-wrap:wrap}
+.hero-points div{font-size:.86rem;font-weight:700;color:var(--forest-2)}
+.hero-points i{color:var(--green);margin-right:.4rem}
+.hero-visual{position:relative}
+.hero-visual .frame{border-radius:28px;overflow:hidden;box-shadow:var(--shadow);border:6px solid #fff}
+.hero-visual img{width:100%;height:420px;object-fit:cover;transition:opacity .6s}
+.mega-badge{position:absolute;left:-14px;bottom:26px;background:var(--red);color:#fff;border-radius:14px;padding:.8rem 1.1rem;box-shadow:var(--shadow);max-width:250px}
+.mega-badge b{font-family:'Playfair Display',serif;font-size:1.25rem;display:block}
+.mega-badge span{font-size:.78rem;opacity:.92}
+.price-badge{position:absolute;right:-8px;top:22px;background:var(--forest);color:#fff;border-radius:999px;padding:.55rem 1.1rem;font-weight:800;box-shadow:var(--shadow)}
+.price-badge span{color:var(--gold)}
+
+/* ---------- Branch availability strip ---------- */
+.pw-conversion{background:var(--forest);color:#eaf3ec;padding:26px 0}
+.conv-in{display:flex;align-items:center;gap:1.4rem;flex-wrap:wrap}
+.conv-in .big{font-family:'Playfair Display',serif;font-size:1.5rem}
+.conv-in .big b{color:var(--gold)}
+.conv-chips{display:flex;gap:.55rem;flex-wrap:wrap;margin-left:auto}
+.chip{border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:.4rem .9rem;font-size:.8rem;font-weight:600;display:flex;gap:.45rem;align-items:center}
+
+/* ---------- Menu cards ---------- */
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:24px}
+.p-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:0 4px 14px rgba(23,35,29,.05);transition:.25s;display:flex;flex-direction:column}
+.p-card:hover{transform:translateY(-5px);box-shadow:var(--shadow)}
+.p-card .img-wrap{position:relative;height:180px;overflow:hidden;background:var(--flour)}
+.p-card .img-wrap img{width:100%;height:100%;object-fit:cover;transition:.4s}
+.p-card:hover .img-wrap img{transform:scale(1.06)}
+.best-tag{position:absolute;top:12px;left:12px;background:var(--gold);color:var(--ink);font-size:.68rem;font-weight:800;letter-spacing:.08em;padding:.32rem .65rem;border-radius:999px;text-transform:uppercase}
+.p-body{padding:18px;display:flex;flex-direction:column;gap:.45rem;flex:1}
+.p-body h3{font-family:'Playfair Display',serif;font-size:1.22rem}
+.p-body .tag{color:var(--muted);font-size:.87rem;flex:1}
+.size-row{display:flex;gap:.45rem;margin:.35rem 0}
+.size-row button{flex:1;border:1.5px solid var(--line);border-radius:10px;padding:.42rem 0;font-weight:700;font-size:.8rem;color:var(--muted);transition:.15s}
+.size-row button.active{border-color:var(--green);background:#eafaf1;color:var(--green-deep)}
+.price-row{display:flex;align-items:center;justify-content:space-between;margin-top:.3rem}
+.price{font-size:1.28rem;font-weight:800;color:var(--forest)}
+.price small{font-size:.75rem;color:var(--muted);font-weight:600}
+.add-btn{background:var(--green);color:#fff;font-weight:800;border-radius:999px;padding:.55rem 1.15rem;display:inline-flex;gap:.4rem;align-items:center;transition:.2s}
+.add-btn:hover{background:var(--green-deep)}
+.add-btn.added{background:var(--gold);color:var(--ink)}
+
+/* ---------- Deals ---------- */
+.deals-section{background:linear-gradient(180deg,var(--flour),var(--paper))}
+.deal-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px}
+.deal-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:0 4px 14px rgba(23,35,29,.05);display:flex;flex-direction:column;gap:.6rem;position:relative;overflow:hidden}
+.deal-card::before{content:"";position:absolute;inset:0 0 auto;height:5px;background:linear-gradient(90deg,var(--green),var(--gold))}
+.deal-top{display:flex;justify-content:space-between;align-items:center}
+.deal-badge{font-weight:800;font-size:.8rem;letter-spacing:.06em;color:var(--tomato)}
+.deal-price{font-family:'Playfair Display',serif;font-size:1.45rem;font-weight:800;color:var(--green-deep)}
+.deal-card h3{font-family:'Playfair Display',serif;font-size:1.3rem}
+.deal-desc{color:var(--muted);font-size:.88rem}
+.deal-visual-row{display:flex;align-items:center;gap:.5rem}
+.deal-visual-item{text-align:center;font-size:.72rem;font-weight:700;color:var(--muted)}
+.deal-visual-item img{width:64px;height:64px;border-radius:50%;object-fit:cover;border:3px solid var(--flour);margin:0 auto .25rem}
+.deal-visual-row .plus{font-size:1.2rem;font-weight:800;color:var(--gold)}
+.deal-card select{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:.55rem .7rem;font-family:inherit;font-weight:600;font-size:.86rem;background:#fff}
+.deal-card label{font-size:.72rem;font-weight:800;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+.deal-add{margin-top:auto;background:var(--forest);color:#fff;font-weight:800;border-radius:999px;padding:.7rem 1rem;width:100%;transition:.2s}
+.deal-add:hover{background:var(--green)}
+.deal-add.added{background:var(--gold);color:var(--ink)}
+.mega-banner{margin-top:26px;background:var(--red);color:#fff;border-radius:var(--radius);padding:26px 30px;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
+.mega-banner h3{font-family:'Playfair Display',serif;font-size:1.7rem}
+.mega-banner p{opacity:.92;font-size:.92rem}
+.mega-banner .btn{margin-left:auto}
+
+/* ---------- Trademark / About ---------- */
+.trademark{background:var(--forest-2);color:#eef5ef}
+.trademark .wrap{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center}
+.trademark img{border-radius:24px;box-shadow:var(--shadow);height:340px;width:100%;object-fit:cover}
+.trademark h2{font-family:'Playfair Display',serif;font-size:2.3rem;margin:.4rem 0 .8rem}
+.trademark .eyebrow{color:var(--gold)}
+.trademark p{color:#c9d8cd}
+.stats{display:flex;gap:2.2rem;margin-top:1.6rem}
+.stats b{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--gold);display:block}
+.stats span{font-size:.8rem;color:#c9d8cd;font-weight:600}
+
+/* ---------- Branches ---------- */
+.branch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:22px}
+.branch-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:0 4px 14px rgba(23,35,29,.05)}
+.branch-card h3{font-family:'Playfair Display',serif;font-size:1.25rem;display:flex;justify-content:space-between;align-items:center;gap:.6rem}
+.status{font-family:'Plus Jakarta Sans',sans-serif;font-size:.68rem;font-weight:800;letter-spacing:.07em;padding:.3rem .65rem;border-radius:999px;text-transform:uppercase;white-space:nowrap}
+.status.open{background:#e4f8ec;color:var(--green-deep)}
+.status.closed{background:#fdecec;color:var(--red)}
+.branch-card p{color:var(--muted);font-size:.88rem;margin:.35rem 0}
+.branch-card .meta{display:flex;gap:1.1rem;flex-wrap:wrap;margin-top:.6rem;font-size:.85rem;font-weight:700}
+.branch-card .meta i{color:var(--green);margin-right:.35rem}
+
+/* ---------- CTA + Footer ---------- */
+.cta{background:var(--green);color:#fff;text-align:center;padding:70px 0}
+.cta h2{font-family:'Playfair Display',serif;font-size:2.4rem;margin-bottom:.6rem}
+.cta p{opacity:.92;margin-bottom:1.6rem}
+footer{background:var(--forest);color:#b9c8bd;padding:56px 0 28px;font-size:.9rem}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:2.5rem;margin-bottom:2.2rem}
+footer h4{color:#fff;font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:.8rem}
+footer a:hover{color:var(--gold)}
+.foot-bottom{border-top:1px solid rgba(255,255,255,.12);padding-top:1.2rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.6rem;font-size:.8rem}
+
+/* ---------- Cart drawer / modal / toast ---------- */
+.cart-overlay{position:fixed;inset:0;background:rgba(15,20,17,.55);opacity:0;pointer-events:none;transition:.25s;z-index:80}
+.cart-overlay.show{opacity:1;pointer-events:auto}
+.cart-drawer{position:fixed;top:0;right:-420px;width:min(400px,92vw);height:100dvh;background:#fff;z-index:90;transition:.3s;display:flex;flex-direction:column;box-shadow:-10px 0 40px rgba(0,0,0,.25)}
+.cart-drawer.show{right:0}
+.cart-head{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--line)}
+.cart-head h3{font-family:'Playfair Display',serif;font-size:1.3rem}
+.cart-items{flex:1;overflow-y:auto;padding:14px 20px;display:flex;flex-direction:column;gap:12px}
+.cart-empty{text-align:center;color:var(--muted);padding:3rem 1rem}
+.cart-item{display:flex;gap:.8rem;border:1px solid var(--line);border-radius:14px;padding:10px}
+.cart-item img{width:58px;height:58px;border-radius:10px;object-fit:cover}
+.cart-item .ci-info{flex:1}
+.cart-item .ci-name{font-weight:800;font-size:.9rem}
+.cart-item .ci-size{font-size:.75rem;color:var(--muted)}
+.qty{display:inline-flex;align-items:center;gap:.5rem;margin-top:.3rem}
+.qty button{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--line);font-weight:800;line-height:1}
+.ci-price{font-weight:800;color:var(--green-deep);white-space:nowrap}
+.cart-foot{border-top:1px solid var(--line);padding:16px 20px}
+.cart-total{display:flex;justify-content:space-between;font-weight:800;font-size:1.1rem;margin-bottom:.8rem}
+.checkout-btn{width:100%;background:var(--green);color:#fff;font-weight:800;border-radius:999px;padding:.85rem;font-size:1rem}
+.checkout-btn:hover{background:var(--green-deep)}
+.modal{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;background:rgba(15,20,17,.6);padding:20px}
+.modal.show{display:flex}
+.modal-card{background:#fff;border-radius:22px;max-width:440px;width:100%;padding:30px;max-height:90dvh;overflow-y:auto}
+.modal-card h3{font-family:'Playfair Display',serif;font-size:1.5rem;margin-bottom:.4rem}
+.modal-card p{color:var(--muted);font-size:.9rem;margin-bottom:1rem}
+.modal-card label{font-size:.75rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.modal-card input,.modal-card textarea,.modal-card select{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:.6rem .75rem;margin:.3rem 0 .9rem;font-family:inherit;font-size:.92rem}
+.toast{position:fixed;bottom:26px;left:50%;transform:translate(-50%,90px);background:var(--forest);color:#fff;font-weight:700;padding:.8rem 1.4rem;border-radius:999px;z-index:120;transition:.35s;box-shadow:var(--shadow);display:flex;gap:.5rem;align-items:center}
+.toast.show{transform:translate(-50%,0)}
+.toast i{color:var(--gold)}
+.chat-fab{position:fixed;right:22px;bottom:22px;z-index:70;width:56px;height:56px;border-radius:50%;background:var(--green);color:#fff;font-size:1.35rem;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center}
+.chat-panel{position:fixed;right:22px;bottom:88px;z-index:70;width:300px;background:#fff;border-radius:18px;box-shadow:var(--shadow);border:1px solid var(--line);padding:18px;display:none}
+.chat-panel.show{display:block}
+.chat-panel h4{font-family:'Playfair Display',serif;margin-bottom:.4rem}
+.chat-panel p{font-size:.85rem;color:var(--muted)}
+
+@media (max-width:900px){
+  nav.main-nav{display:none}
+  .burger{display:block}
+  .hero-in{grid-template-columns:1fr;padding:44px 0 54px}
+  .hero h1{font-size:2.5rem}
+  .hero-visual img{height:300px}
+  .trademark .wrap{grid-template-columns:1fr}
+  .foot-grid{grid-template-columns:1fr}
+  .section{padding:60px 0}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== Header : dark editorial nav ===== -->
+<header>
+  <div class="wrap header-in">
+    <a class="logo" href="#home">
+      <img src="Pizzaimages/daynight-logo.svg" alt="Day Night Pizza logo">
+      <span class="logo-text">Day Night Pizza<small>DUNGA BUNGA</small></span>
+    </a>
+    <button class="burger" id="burger" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+    <nav class="main-nav" id="mainNav">
+      <a href="#home">Home</a>
+      <a href="#deals">Deals</a>
+      <a href="#menu">Menu</a>
+      <a href="#about">About</a>
+      <a href="#branches">Branches</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <button class="order-btn" id="cartBtn"><i class="fa-solid fa-cart-shopping"></i> Order <span class="count" id="cartCount">0</span></button>
+  </div>
+</header>
+
+<!-- ===== Order mode bar ===== -->
+<section class="order-mode-bar" id="orderModeBar">
+  <div class="wrap mode-in">
+    <div class="mode-toggle" role="tablist" aria-label="Order mode">
+      <button class="active" data-mode="Delivery"><i class="fa-solid fa-motorcycle"></i> Delivery</button>
+      <button data-mode="Pickup"><i class="fa-solid fa-bag-shopping"></i> Pickup</button>
+    </div>
+    <span><i class="fa-solid fa-location-dot" style="color:var(--gold)"></i> <span id="modeBranchLabel">Day Night Pizza · Main Bazar Thana Road, Dunga Bunga</span></span>
+    <span class="mode-status"><span class="dot" id="modeDot"></span><span id="modeStatus">Open now · order in minutes</span></span>
+  </div>
+</section>
+
+<!-- ===== Hero ===== -->
+<section class="hero" id="home">
+  <div class="wrap hero-in">
+    <div>
+      <span class="eyebrow">Day Night Pizza · Dunga Bunga</span>
+      <h1 id="heroTitle">Day ho ya night, <em>pizza</em> hamesha right.</h1>
+      <p class="lead" id="heroLead">Fresh, loaded pizzas in the heart of Dunga Bunga — dine in with family under the lights, or get it delivered hot to your door, from just <b>Rs. 230</b>.</p>
+      <div class="hero-cta">
+        <a class="btn btn-green" href="#menu"><i class="fa-solid fa-pizza-slice"></i> View Menu</a>
+        <a class="btn btn-ghost" href="#deals"><i class="fa-solid fa-tags"></i> See Deals</a>
+      </div>
+      <div class="hero-points">
+        <div><i class="fa-solid fa-motorcycle"></i> Fast delivery</div>
+        <div><i class="fa-solid fa-store"></i> Dine-in · Takeaway · Delivery</div>
+        <div><i class="fa-solid fa-clock"></i> Open daily till 1:30 AM</div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="frame"><img id="heroImg" src="Pizzaimages/Slider1.webp" alt="Day Night Pizza signature pizza"></div>
+      <div class="price-badge">From <span>Rs. 230</span></div>
+      <div class="mega-badge"><b id="megaBadgeTitle">Mega Deal — 10% OFF</b><span id="megaBadgeText">Exclusive online offer — only at Day Night Pizza, Dunga Bunga · dine-in + delivery</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Branch availability strip ===== -->
+<section class="pw-conversion" aria-label="Day Night Pizza branch availability">
+  <div class="wrap conv-in">
+    <div class="big"><b id="openCount">–</b> · Day Night Pizza, Dunga Bunga</div>
+    <div class="conv-chips" id="convChips"></div>
+  </div>
+</section>
+
+<!-- ===== Best sellers ===== -->
+<section class="section pw-best" id="bestSellers" style="padding-bottom:20px">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">★ Best Sellers</span>
+      <h2>Loved Across Dunga Bunga</h2>
+      <p>The four pizzas Dunga Bunga keeps ordering again and again.</p>
+    </div>
+    <div class="menu-grid" id="bestGrid"></div>
+  </div>
+</section>
+
+<!-- ===== Menu ===== -->
+<section id="menu" class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Our Menu</span>
+      <h2>Choose Your Favourite</h2>
+      <p>16 hand-crafted pizzas. Pick a size, tap Add — your cart does the rest.</p>
+    </div>
+    <div class="menu-grid" id="menuGrid"></div>
+  </div>
+</section>
+
+<!-- ===== Deals ===== -->
+<section id="deals" class="section deals-section">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Value Deals</span>
+      <h2>Day Night Deals</h2>
+      <p>More pizza, better value. Choose your flavour where available.</p>
+    </div>
+    <div class="deal-grid" id="dealGrid"></div>
+    <div class="mega-banner">
+      <div>
+        <h3 id="megaTitle">Day Night Mega Deal — Save 10% OFF</h3>
+        <p id="megaText">Exclusive online offer — only at Day Night Pizza, Main Bazar Thana Road, Dunga Bunga. Dine-in, takeaway + delivery.</p>
+      </div>
+      <button class="btn btn-gold" id="megaBtn"><i class="fa-solid fa-bolt"></i> Order This Deal</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Trademark / About ===== -->
+<section class="section trademark" id="about">
+  <div class="wrap">
+    <div>
+      <span class="eyebrow">Visit Us</span>
+      <h2>Day Night Pizza, Dunga Bunga</h2>
+      <p>A family dine-in in the middle of Main Bazar — cosy red booths, fresh-from-the-oven pizzas and a warm welcome, day and night. Find us on Thana Road, or call <b>0304-7922262</b> and we will bring it to your door.</p>
+      <div class="stats">
+        <div><b>3.5★</b><span>Google rating</span></div>
+        <div><b>1:30 AM</b><span>Open till, daily</span></div>
+        <div><b>Rs. 230</b><span>Starting price</span></div>
+      </div>
+      <p style="margin-top:1.4rem"><a class="btn btn-gold" href="#menu">See the Menu</a></p>
+    </div>
+    <img src="Pizzaimages/daynight-interior.jpg" alt="Inside Day Night Pizza, Dunga Bunga">
+  </div>
+</section>
+
+<!-- ===== Branches ===== -->
+<section class="section branch-section" id="branches">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Find Us</span>
+      <h2>Find Us</h2>
+      <p>Main Bazar Thana Road, Dunga Bunga — with live open / closed status.</p>
+    </div>
+    <div class="branch-grid" id="branchGrid"></div>
+  </div>
+</section>
+
+<!-- ===== CTA / Contact ===== -->
+<section class="cta" id="contact">
+  <div class="wrap">
+    <h2>Hungry? We are one tap away.</h2>
+    <p>Order online for delivery or pickup — hot, fresh and loaded, every single time.</p>
+    <a class="btn btn-gold" href="#menu"><i class="fa-solid fa-cart-plus"></i> Start Your Order</a>
+  </div>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h4>Day Night Pizza — Dunga Bunga</h4>
+        <p>Day ho ya night — fresh, loaded pizzas on Main Bazar Thana Road, Dunga Bunga. Dine-in, takeaway and delivery, 7 days a week.</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <p><a href="#menu">Menu</a><br><a href="#deals">Deals</a><br><a href="#branches">Branches</a><br><a href="#about">About</a></p>
+      </div>
+      <div>
+        <h4>Order</h4>
+        <p>Delivery &amp; pickup via this website.<br>Call: 0304-7922262<br>Open daily 1:30 PM – 1:30 AM</p>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Day Night Pizza, Dunga Bunga — online ordering website &amp; admin panel.</span>
+      <span>Main Bazar Thana Road · 0304-7922262</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== Cart drawer ===== -->
+<div class="cart-overlay" id="cartOverlay"></div>
+<aside class="cart-drawer" id="cartDrawer" aria-label="Shopping cart">
+  <div class="cart-head">
+    <h3>Your Cart</h3>
+    <button id="cartClose" aria-label="Close cart" style="font-size:1.2rem"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-foot">
+    <div class="cart-total"><span>Total</span><span id="cartTotal">Rs. 0</span></div>
+    <button class="checkout-btn" id="checkoutBtn"><i class="fa-solid fa-lock"></i> Checkout</button>
+  </div>
+</aside>
+
+<!-- ===== Checkout modal ===== -->
+<div class="modal" id="checkoutModal">
+  <div class="modal-card">
+    <h3 id="modalTitle">Place Your Order</h3>
+    <p>Your order is sent straight to the shop's admin panel.</p>
+    <form id="checkoutForm">
+      <label for="fName">Your name</label>
+      <input id="fName" required placeholder="e.g. Waqar Ahmad">
+      <label for="fPhone">Phone</label>
+      <input id="fPhone" required placeholder="03xx-xxxxxxx">
+      <label for="fBranch">Branch</label>
+      <select id="fBranch"></select>
+      <label for="fAddr">Delivery address</label>
+      <textarea id="fAddr" rows="2" placeholder="House, street, area, Lahore"></textarea>
+      <label for="fPay">Payment method</label>
+      <select id="fPay"><option>Cash on Delivery</option></select>
+      <button class="checkout-btn" type="submit">Confirm Order</button>
+      <button type="button" id="modalCancel" style="width:100%;margin-top:.6rem;font-weight:700;color:var(--muted)">Cancel</button>
+    </form>
+  </div>
+</div>
+
+<!-- ===== Toast + chat ===== -->
+<div class="toast" id="toast"><i class="fa-solid fa-circle-check"></i><span id="toastText">Added to cart</span></div>
+<button class="chat-fab" id="chatFab" aria-label="Help chat"><i class="fa-solid fa-comments"></i></button>
+<div class="chat-panel" id="chatPanel">
+  <h4>Help &amp; Smart Order</h4>
+  <p>Assalam-o-Alaikum! This is the Day Night Pizza help widget. For live orders please use the cart above — or call us at 0304-7922262.</p>
+</div>
+
+<script>
+/* ===== Data reconstructed from pizzaworldpk.com (menu array, deals, branches) ===== */
+const SIZES = ["Small","Medium","Large"];
+let menu = [
+  ["Afghani Pizza","Rich Afghani Flavor, Perfectly Baked.","Pizzaimages/Fajitapizza.png",[300,600,900],1],
+  ["Stuffed Pizza","Loaded Inside, Delicious Outside.","Pizzaimages/SP.png",[350,600,1000],1],
+  ["Crown Crust Pizza","The King of Crust.","Pizzaimages/Crown.png",[350,600,1000],1],
+  ["Fajita Pizza","Classic chicken fajita with cheese and fresh toppings.","Pizzaimages/Fajitapizza.png",[230,420,680],1],
+  ["Tikka Pizza","Flavorful chicken tikka with cheese and delicious toppings.","Pizzaimages/tikka11.png",[230,420,680],0],
+  ["Cheese Lover Pizza","Rich and cheesy pizza made for cheese lovers.","Pizzaimages/cheze11.png",[230,420,680],0],
+  ["Vege Lover Pizza","Fresh vegetables with cheese and delicious toppings.","Pizzaimages/vege11.png",[230,420,680],0],
+  ["Supreme Pizza","Classic chicken fajita with cheese and fresh toppings.","Pizzaimages/fajita11.png",[230,420,680],0],
+  ["Lazania Pizza","Our signature Day Night special pizza.","Pizzaimages/Lazania.png",[590,920],0],
+  ["Malai Boti Pizza","Creamy Malai Boti chicken with cheese.","Pizzaimages/Malaiboti.webp",[350,600,900],0],
+  ["Kabab Pizza","Juicy kabab pieces with cheese and toppings.","Pizzaimages/image1.webp",[300,600,900],0],
+  ["BBQ Pizza","Smoky BBQ chicken with fresh toppings.","Pizzaimages/tikka.webp",[300,550,800],0],
+  ["Turkey Pizza","Tender turkey with cheese and fresh toppings.","Pizzaimages/turkey-new.webp",[300,550,800],0],
+  ["Creamy Pizza","Creamy pizza with cheese and delicious toppings.","Pizzaimages/CreamPizza.webp",[300,520,820],0],
+  ["Peri Peri Pizza","Hot, Spicy, Delicious Peri Peri Pizza.","Pizzaimages/peri.png",[300,520,800],0],
+  ["Kabab Crust","Delicious kabab crust with cheese and fresh toppings.","Pizzaimages/Kabab.webp",[800,1200],0]
+];
+/* size labels depend on how many prices an item has: [S,M,L] or [M,L] */
+function sizeLabels(prices){ return prices.length===3 ? SIZES : ["Medium","Large"]; }
+
+let deals = [
+  {badge:"🔥 DEAL 1", price:1360, name:"Two Large Pizzas", desc:"Fixed combo — no flavour selection needed.",
+   visual:["Tikka Pizza","Fajita Pizza"], fixed:"Large Tikka Pizza + Large Fajita Pizza"},
+  {badge:"⭐ DEAL 2", price:1100, name:"Large + Medium", desc:"Choose the flavour of each pizza separately.",
+   selects:[["Large Pizza Flavour",["Tikka","Fajita"]],["Medium Pizza Flavour",["Tikka","Fajita"]]]},
+  {badge:"🎁 DEAL 3", price:910, name:"Large + Small", desc:"Choose the flavour of your Large and Small pizza separately.",
+   selects:[["Large Pizza Flavour",["Tikka","Fajita","Supreme","Cheese Lover","Veggie Lover"]],["Small Pizza Flavour",["Tikka","Fajita","Supreme","Cheese Lover","Veggie Lover"]]]},
+  {badge:"👑 DEAL 4", price:1600, name:"Lazania + Large Pizza", desc:"Lazania Pizza is included. Choose Tikka or Fajita for the Large pizza.",
+   visual:["Lazania Pizza"], selects:[["Large Pizza Flavour",["Tikka","Fajita"]]], fixed:"Lazania Pizza + "}
+];
+
+let branches = [
+  {name:"Day Night Pizza", shortAddress:"Main Bazar Thana Road, Dunga Bunga", address:"Main Bazar Thana Road, Dunga Bunga, 62110, Pakistan", phone:"0304-7922262", timing:"1:30 PM to 1:30 AM", open:13, close:1}
+];
+const imgFor = name => (menu.find(m=>m[0]===name)||[])[2] || "Pizzaimages/Fajitapizza.png";
+
+/* ===== Live open/closed status (Asia/Karachi) ===== */
+function pktHour(){
+  const s = new Date().toLocaleString("en-US",{timeZone:"Asia/Karachi",hour:"numeric",hour12:false});
+  return parseInt(s,10) % 24;
+}
+function isOpen(b){
+  const h = pktHour();
+  return b.close <= b.open ? (h >= b.open || h < b.close) : (h >= b.open && h < b.close);
+}
+
+/* ===== Menu rendering ===== */
+const selSize = {}; // product name -> selected size index
+function cardHTML(item){
+  const [name, tag, img, prices, best] = item;
+  const labels = sizeLabels(prices);
+  const idx = selSize[name] || 0;
+  return `<article class="p-card">
+    <div class="img-wrap"><img src="${img}" alt="${name}" loading="lazy">${best?'<span class="best-tag">★ Best Seller</span>':''}</div>
+    <div class="p-body">
+      <h3>${name}</h3>
+      <p class="tag">${tag}</p>
+      <div class="size-row">${labels.map((l,i)=>`<button data-size="${name}|${i}" class="${i===idx?'active':''}">${l}</button>`).join("")}</div>
+      <div class="price-row">
+        <span class="price"><small>Rs.</small> ${prices[idx].toLocaleString()}</span>
+        <button class="add-btn" data-add="${name}"><i class="fa-solid fa-cart-plus"></i> Add +</button>
+      </div>
+    </div>
+  </article>`;
+}
+function renderMenu(){
+  document.getElementById("menuGrid").innerHTML = menu.map(cardHTML).join("");
+  document.getElementById("bestGrid").innerHTML = menu.filter(m=>m[4]).map(cardHTML).join("");
+}
+renderMenu();
+
+document.addEventListener("click", e=>{
+  const sb = e.target.closest("[data-size]");
+  if(sb){
+    const [name, i] = sb.dataset.size.split("|");
+    selSize[name] = parseInt(i,10);
+    renderMenu();
+    return;
+  }
+  const ab = e.target.closest("[data-add]");
+  if(ab){
+    const item = menu.find(m=>m[0]===ab.dataset.add);
+    const labels = sizeLabels(item[3]);
+    const idx = selSize[item[0]] || 0;
+    addToCart({name:item[0], detail:labels[idx], price:item[3][idx], img:item[2]});
+    flashBtn(ab);
+  }
+});
+
+/* ===== Deals rendering ===== */
+function renderDeals(){
+  document.getElementById("dealGrid").innerHTML = deals.map((d,i)=>{
+    const visual = (d.visual||[]).map(v=>`<div class="deal-visual-item"><img src="${imgFor(v)}" alt="${v}">${v.replace(" Pizza","")}</div>`).join('<span class="plus">+</span>');
+    const selects = (d.selects||[]).map(([label,opts],si)=>`
+      <label>${label}</label>
+      <select data-deal="${i}" data-sel="${si}">
+        <option value="">Choose Flavour</option>
+        ${opts.map(o=>`<option>${o}</option>`).join("")}
+      </select>`).join("");
+    return `<div class="deal-card">
+      <div class="deal-top"><span class="deal-badge">${d.badge}</span><span class="deal-price">Rs. ${d.price.toLocaleString()}</span></div>
+      <h3>${d.name}</h3>
+      <p class="deal-desc">${d.desc}</p>
+      ${visual?`<div class="deal-visual-row">${visual}</div>`:""}
+      ${selects}
+      <button class="deal-add" data-deal-add="${i}"><i class="fa-solid fa-cart-plus"></i> Add Deal</button>
+    </div>`;
+  }).join("");
+}
+renderDeals();
+
+document.addEventListener("click", e=>{
+  const db = e.target.closest("[data-deal-add]");
+  if(!db) return;
+  const d = deals[parseInt(db.dataset.dealAdd,10)];
+  let detail = d.fixed || d.name;
+  if(d.selects){
+    const chosen = [];
+    for(let si=0; si<d.selects.length; si++){
+      const sel = document.querySelector(`select[data-deal="${db.dataset.dealAdd}"][data-sel="${si}"]`);
+      if(!sel.value){ showToast("Please choose a flavour first"); sel.focus(); return; }
+      chosen.push(sel.value);
+    }
+    detail = (d.fixed||"") + chosen.join(" + ");
+    if(!d.fixed) detail = d.name + " (" + chosen.join(" + ") + ")";
+  }
+  addToCart({name:d.badge.replace(/^\S+ /,"") + " — " + d.name, detail, price:d.price, img:imgFor((d.visual||["Fajita Pizza"])[0])});
+  flashBtn(db);
+});
+
+/* ===== Branches rendering ===== */
+function renderBranches(){
+  document.getElementById("branchGrid").innerHTML = branches.map(b=>`
+    <div class="branch-card">
+      <h3>${b.name} <span class="status ${isOpen(b)?'open':'closed'}">${isOpen(b)?'Open Now':'Closed'}</span></h3>
+      <p><b>${b.shortAddress}</b></p>
+      <p>${b.address}</p>
+      <div class="meta">
+        <span><i class="fa-solid fa-phone"></i>${b.phone}</span>
+        <span><i class="fa-solid fa-clock"></i>${b.timing}</span>
+      </div>
+    </div>`).join("");
+  const open = branches.filter(isOpen);
+  document.getElementById("openCount").textContent = open.length;
+  document.getElementById("convChips").innerHTML = branches.map(b=>
+    `<span class="chip"><span class="dot ${isOpen(b)?'':'closed'}"></span>${b.name.replace("Branch ","B")} · ${b.shortAddress.split(",")[0]}</span>`).join("");
+  const firstOpen = open[0];
+  document.getElementById("modeStatus").textContent = firstOpen
+    ? `Open now · ${firstOpen.name} till ${firstOpen.timing.split(" to ")[1]}`
+    : "All branches closed right now";
+  document.getElementById("modeDot").className = "dot" + (firstOpen ? "" : " closed");
+  const sel = document.getElementById("fBranch");
+  sel.innerHTML = branches.map(b=>`<option>${b.name} — ${b.shortAddress}</option>`).join("");
+}
+renderBranches();
+setInterval(renderBranches, 60000);
+
+/* ===== Cart ===== */
+let cart = [];
+function addToCart(entry){
+  const found = cart.find(c=>c.name===entry.name && c.detail===entry.detail);
+  if(found) found.qty++;
+  else cart.push({...entry, qty:1});
+  updateCart();
+  showToast(entry.name + " added to cart");
+}
+function updateCart(){
+  const count = cart.reduce((a,c)=>a+c.qty,0);
+  const total = cart.reduce((a,c)=>a+c.qty*c.price,0);
+  document.getElementById("cartCount").textContent = count;
+  document.getElementById("cartTotal").textContent = "Rs. " + total.toLocaleString();
+  const box = document.getElementById("cartItems");
+  if(!cart.length){
+    box.innerHTML = `<div class="cart-empty"><i class="fa-solid fa-cart-shopping" style="font-size:2rem"></i><h3 style="margin:.6rem 0 .3rem">Your Cart Is Empty</h3><p>Add a pizza or a deal to get started.</p></div>`;
+    return;
+  }
+  box.innerHTML = cart.map((c,i)=>`
+    <div class="cart-item">
+      <img src="${c.img}" alt="">
+      <div class="ci-info">
+        <div class="ci-name">${c.name}</div>
+        <div class="ci-size">${c.detail}</div>
+        <span class="qty"><button data-qty="${i}|-1">−</button>${c.qty}<button data-qty="${i}|1">+</button></span>
+      </div>
+      <div class="ci-price">Rs. ${(c.price*c.qty).toLocaleString()}</div>
+    </div>`).join("");
+}
+updateCart();
+document.addEventListener("click", e=>{
+  const qb = e.target.closest("[data-qty]");
+  if(!qb) return;
+  const [i, d] = qb.dataset.qty.split("|");
+  const item = cart[parseInt(i,10)];
+  item.qty += parseInt(d,10);
+  if(item.qty <= 0) cart.splice(parseInt(i,10),1);
+  updateCart();
+});
+
+/* ===== Drawer / modal / misc UI ===== */
+const drawer = document.getElementById("cartDrawer"), overlay = document.getElementById("cartOverlay");
+function toggleCart(show){ drawer.classList.toggle("show", show); overlay.classList.toggle("show", show); }
+document.getElementById("cartBtn").addEventListener("click", ()=>toggleCart(true));
+document.getElementById("cartClose").addEventListener("click", ()=>toggleCart(false));
+overlay.addEventListener("click", ()=>toggleCart(false));
+
+const modal = document.getElementById("checkoutModal");
+document.getElementById("checkoutBtn").addEventListener("click", ()=>{
+  if(!cart.length){ showToast("Your cart is empty"); return; }
+  toggleCart(false); modal.classList.add("show");
+});
+document.getElementById("modalCancel").addEventListener("click", ()=>modal.classList.remove("show"));
+document.getElementById("checkoutForm").addEventListener("submit", async e=>{
+  e.preventDefault();
+  const total = cart.reduce((a,c)=>a+c.qty*c.price,0);
+  const name = document.getElementById("fName").value || "customer";
+  const payload = {
+    customer_name: name,
+    phone: document.getElementById("fPhone").value,
+    address: document.getElementById("fAddr").value,
+    branch: document.getElementById("fBranch").value,
+    mode: document.querySelector(".mode-toggle button.active")?.dataset.mode || "Delivery",
+    items: cart.map(c=>({name:c.name, detail:c.detail, price:c.price, qty:c.qty})),
+    total,
+    payment_method: document.getElementById("fPay").value
+  };
+  let orderId = null, sent = false;
+  try {
+    const res = await fetch(API_BASE + "/api/orders", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(payload)});
+    if (res.ok) { const d = await res.json(); orderId = d.order_id; sent = true; }
+  } catch(_) { /* offline / file mode: fall through to demo confirmation */ }
+  document.querySelector("#checkoutModal .modal-card").innerHTML = `
+    <div style="text-align:center;padding:1rem 0">
+      <i class="fa-solid fa-circle-check" style="font-size:3rem;color:var(--green)"></i>
+      <h3 style="margin:.8rem 0 .4rem">Order Confirmed!</h3>
+      <p>Thank you, <b>${name}</b>. Your order of <b>Rs. ${total.toLocaleString()}</b> has been placed.${sent ? `<br>Order number: <b>#${orderId}</b> — the shop can see it in the admin panel.` : `<br>(Demo confirmation — the server was not reachable.)`}</p>
+      <button class="checkout-btn" onclick="location.reload()">Back to Menu</button>
+    </div>`;
+  cart = []; updateCart();
+});
+document.getElementById("megaBtn").addEventListener("click", ()=>{
+  addToCart({name:"Mega Deal — 10% OFF", detail:"Branch #6 exclusive online offer", price:0, img:"Pizzaimages/Slider1.webp"});
+  showToast("Mega Deal applied — 10% OFF at Branch #6");
+});
+
+/* mode toggle + branch label */
+document.querySelectorAll(".mode-toggle button").forEach(b=>b.addEventListener("click", ()=>{
+  document.querySelectorAll(".mode-toggle button").forEach(x=>x.classList.remove("active"));
+  b.classList.add("active");
+  showToast(b.dataset.mode + " mode selected");
+}));
+
+/* hero slider (matches the original's rotating hero images) */
+const heroImgs = ["Pizzaimages/Slider1.webp","Pizzaimages/Malaiboti.webp","Pizzaimages/fajita11.png"];
+let heroIdx = 0;
+setInterval(()=>{
+  heroIdx = (heroIdx+1) % heroImgs.length;
+  const el = document.getElementById("heroImg");
+  el.style.opacity = 0;
+  setTimeout(()=>{ el.src = heroImgs[heroIdx]; el.style.opacity = 1; }, 350);
+}, 5000);
+
+/* toast / button feedback */
+let toastTimer;
+function showToast(msg){
+  const t = document.getElementById("toast");
+  document.getElementById("toastText").textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove("show"), 2200);
+}
+function flashBtn(btn){
+  const old = btn.innerHTML;
+  btn.classList.add("added");
+  btn.innerHTML = '<i class="fa-solid fa-check"></i> Added ✓';
+  setTimeout(()=>{ btn.classList.remove("added"); btn.innerHTML = old; }, 1400);
+}
+
+/* ===== Live data from the backend (falls back to the built-in data when offline) ===== */
+const API_BASE = location.hostname.endsWith("surge.sh") ? "https://daynight-pizza.onrender.com" : "";
+(async function loadFromBackend(){
+  try {
+    const res = await fetch(API_BASE + "/api/bootstrap");
+    if (!res.ok) return;
+    const d = await res.json();
+    if (Array.isArray(d.products) && d.products.length)
+      menu = d.products.map(p=>[p.name, p.tagline, p.image.startsWith("uploads/") ? API_BASE + "/" + p.image : p.image, p.prices, p.best_seller ? 1 : 0]);
+    if (Array.isArray(d.deals) && d.deals.length)
+      deals = d.deals.map(x=>({badge:x.badge, price:x.price, name:x.name, desc:x.description, visual:x.visual, selects:x.selects, fixed:x.fixed}));
+    if (Array.isArray(d.branches) && d.branches.length)
+      branches = d.branches.map(b=>({name:b.name, shortAddress:b.short_address, address:b.address, phone:b.phone, timing:b.timing, open:b.open_hour, close:b.close_hour}));
+    if (d.site){
+      if (d.site.hero_title) document.getElementById("heroTitle").innerHTML = d.site.hero_title;
+      if (d.site.hero_lead) document.getElementById("heroLead").innerHTML = d.site.hero_lead;
+      if (d.site.mega_title){ document.getElementById("megaTitle").textContent = d.site.mega_title;
+        document.getElementById("megaBadgeTitle").textContent = d.site.mega_title; }
+      if (d.site.mega_text){ document.getElementById("megaText").textContent = d.site.mega_text;
+        document.getElementById("megaBadgeText").textContent = d.site.mega_text; }
+    }
+    if (d.payment && d.payment.enabled && d.payment.provider && d.payment.provider !== "none"){
+      const label = {stripe:"Card (Stripe)", jazzcash:"JazzCash", easypaisa:"EasyPaisa"}[d.payment.provider] || d.payment.provider;
+      const opt = document.createElement("option");
+      opt.textContent = label + " — pay online";
+      document.getElementById("fPay").appendChild(opt);
+    }
+    renderMenu(); renderDeals(); renderBranches();
+  } catch(_) { /* built-in data stays */ }
+})();
+
+/* chat widget + mobile nav */
+document.getElementById("chatFab").addEventListener("click", ()=>document.getElementById("chatPanel").classList.toggle("show"));
+document.getElementById("burger").addEventListener("click", ()=>{
+  const n = document.getElementById("mainNav");
+  n.style.display = n.style.display === "flex" ? "" : "flex";
+  n.style.flexDirection = "column"; n.style.position = "absolute"; n.style.top = "72px"; n.style.right = "0";
+  n.style.background = "var(--ink)"; n.style.padding = "1rem 1.4rem"; n.style.gap = "1rem";
+});
+</script>
+</body>
+</html>
