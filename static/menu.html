@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menu — Day Night Pizza, Dunga Bunga</title>
+<link rel="icon" href="Pizzaimages/daynight-favicon.png">
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<link rel="stylesheet" href="assets/fontawesome/css/all.min.css">
+<style>
+:root{--green:#087443;--green-deep:#0b5a36;--forest:#173c2b;--gold:#d7ad55;--ink:#181513;--cream:#fff8ec}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:#f3efe6;color:var(--ink)}
+.topbar{background:#fff;border-bottom:1px solid #e7e0cf;position:sticky;top:0;z-index:10}
+.topbar-in{max-width:860px;margin:0 auto;padding:14px 5vw;display:flex;align-items:center;gap:14px}
+.topbar img{width:52px;height:52px;border-radius:50%}
+.topbar h1{font-size:1.7rem;font-weight:800;letter-spacing:.02em}
+.topbar p{font-size:.68rem;letter-spacing:.28em;color:#8a8172;font-weight:700;text-transform:uppercase}
+.back{margin-left:auto;width:42px;height:42px;border-radius:50%;border:1px solid #e0d8c4;display:flex;align-items:center;justify-content:center;color:#6b6353;text-decoration:none;font-size:1.05rem;background:#fff}
+.wrap{max-width:860px;margin:0 auto;padding:22px 5vw 60px}
+.dl-btn{display:flex;align-items:center;justify-content:center;gap:.6rem;width:100%;background:#f5b921;color:#181206;font-weight:800;font-size:1.05rem;letter-spacing:.06em;border:none;border-radius:14px;padding:1rem;cursor:pointer;box-shadow:0 12px 26px rgba(245,185,33,.35);margin-bottom:22px}
+.dl-btn:active{transform:scale(.99)}
+.flyer{background:var(--forest);border-radius:20px;padding:26px 22px;color:#fff;margin-bottom:22px;box-shadow:0 18px 40px rgba(23,60,43,.25)}
+.flyer-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.flyer-head img{height:44px;width:auto;background:#0b0b0b;border-radius:10px;padding:4px 8px}
+.flyer-head .order-line{margin-left:auto;font-size:.78rem;font-weight:700;color:var(--gold);text-align:right}
+.flyer h2{font-family:'Playfair Display',serif;font-size:2rem;color:var(--gold);margin:12px 0 4px}
+.flyer .sizes{font-size:.72rem;letter-spacing:.22em;color:#cfe3d6;font-weight:700;text-transform:uppercase;margin-bottom:10px}
+table{width:100%;border-collapse:collapse}
+td{padding:.42rem 0;border-bottom:1px dashed rgba(255,255,255,.18);font-size:.95rem;vertical-align:top}
+td.n{font-weight:700}
+td.n small{display:block;font-weight:500;color:#cfe3d6;font-size:.76rem}
+td.p{text-align:right;font-weight:800;color:#ffd97a;white-space:nowrap;padding-left:10px}
+td.p small{display:block;color:#cfe3d6;font-weight:600;font-size:.72rem}
+.deal{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:14px 16px;margin-top:12px}
+.deal b{font-family:'Playfair Display',serif;font-size:1.15rem;color:#fff}
+.deal p{font-size:.85rem;color:#cfe3d6;margin:.25rem 0}
+.deal .dp{font-weight:800;color:#ffd97a;font-size:1.05rem}
+.foot{text-align:center;color:#6b6353;font-size:.85rem;line-height:1.7}
+.foot b{color:var(--ink)}
+.loading{text-align:center;padding:50px 0;color:#8a8172;font-weight:600}
+@media print{
+  .topbar,.dl-btn{display:none!important}
+  body{background:#fff}
+  .wrap{padding:0}
+  .flyer{box-shadow:none;break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-in">
+    <img src="Pizzaimages/daynight-emblem.png" alt="Day Night Pizza">
+    <div>
+      <h1>MENU</h1>
+      <p>Download menu &amp; browse the full price list</p>
+    </div>
+    <a class="back" href="index.html" aria-label="Back to website"><i class="fa-solid fa-xmark"></i></a>
+  </div>
+</header>
+
+<main class="wrap">
+  <button class="dl-btn" onclick="window.print()"><i class="fa-solid fa-download"></i> DOWNLOAD MENU</button>
+  <div id="menuRoot"><p class="loading">Menu load ho raha hai…</p></div>
+  <div class="foot" id="menuFoot"></div>
+</main>
+
+<script>
+const API_CANDIDATES = [
+  location.hostname.endsWith("surge.sh") ? "https://daynight-pizza.onrender.com" : "",
+  "https://daynight-pizza.onrender.com",
+  ""
+];
+function money(n){ return "Rs. " + Number(n).toLocaleString(); }
+async function loadMenu(){
+  let data = null;
+  for (const base of [...new Set(API_CANDIDATES)]){
+    try { const r = await fetch(base + "/api/bootstrap"); if (r.ok) { data = await r.json(); break; } } catch(e) {}
+  }
+  const root = document.getElementById("menuRoot");
+  if (!data){ root.innerHTML = '<p class="loading">Menu abhi load nahi ho saka — baraye meharbani website ke menu section se order karein.</p>'; return; }
+  const pizzaRows = data.products.map(p => `
+    <tr>
+      <td class="n">${p.name}<small>${p.tagline || ""}</small></td>
+      <td class="p">${p.prices.map((pr,i)=>`<small>${["Small","Medium","Large"][i] || ""}</small>${money(pr)}`).join("<br>")}</td>
+    </tr>`).join("");
+  const dealCards = data.deals.map(d => `
+    <div class="deal"><b>${d.title}</b><p>${d.blurb || ""}</p><span class="dp">${money(d.price)}</span></div>`).join("");
+  const b = data.branches[0] || {};
+  root.innerHTML = `
+    <section class="flyer">
+      <div class="flyer-head">
+        <img src="Pizzaimages/daynight-logo.png" alt="Day Night Pizza">
+        <div class="order-line">ORDER NOW<br>daynight-pizza.surge.sh<br>Call: ${b.phone || "0304-7922262"}</div>
+      </div>
+      <h2>Our Pizzas</h2>
+      <div class="sizes">Hand-tossed · Loaded with cheese · Small / Medium / Large</div>
+      <table>${pizzaRows}</table>
+    </section>
+    <section class="flyer">
+      <h2>Deals</h2>
+      <div class="sizes">Best value combos — dine-in, takeaway &amp; delivery</div>
+      ${dealCards}
+    </section>`;
+  document.getElementById("menuFoot").innerHTML =
+    `<b>Day Night Pizza</b> — ${b.address || "Main Bazar Thana Road, Dunga Bunga"}<br>` +
+    `Open daily: ${b.timing || "1:30 PM to 1:30 AM"} · Phone: <b>${b.phone || "0304-7922262"}</b><br>` +
+    `Order online: <b>daynight-pizza.surge.sh</b>`;
+}
+loadMenu();
+</script>
+</body>
+</html>

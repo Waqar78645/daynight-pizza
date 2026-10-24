@@ -195,6 +195,23 @@ footer a:hover{color:var(--gold)}
 .modal-card p{color:var(--muted);font-size:.9rem;margin-bottom:1rem}
 .modal-card label{font-size:.75rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .modal-card{max-height:92vh;overflow-y:auto}
+.slip{background:#fff;color:#111;border:1.5px dashed #c9c2ae;border-radius:10px;padding:16px 16px 12px;font-family:'Courier New',monospace;max-width:360px;margin:1rem auto 0;text-align:left}
+.slip-head{text-align:center}
+.slip-head img{width:52px;height:52px;border-radius:50%;margin:0 auto 4px}
+.slip-head h4{font-family:'Playfair Display',serif;font-size:1.25rem;letter-spacing:.04em}
+.slip-head p{font-size:.72rem;color:#444;line-height:1.5}
+.slip-meta{display:flex;justify-content:space-between;gap:8px;font-size:.74rem;border-top:1px dashed #bbb;padding:.35rem 0;border-bottom:1px dashed #bbb;flex-wrap:wrap}
+.slip-table{width:100%;border-collapse:collapse;font-size:.78rem;margin:.4rem 0}
+.slip-table th{border-bottom:1px solid #999;text-align:left;padding:.25rem 0}
+.slip-table td{padding:.28rem 0;border-bottom:1px dotted #ccc;vertical-align:top}
+.slip-table .c{text-align:center}.slip-table .r{text-align:right}
+.slip-table small{color:#555}
+.slip-row{display:flex;justify-content:space-between;font-size:.8rem;padding:.2rem 0}
+.slip-row.grand{font-size:.95rem;border-top:1.5px solid #111;border-bottom:1.5px solid #111;padding:.35rem 0;margin:.25rem 0}
+.slip-cust{font-size:.76rem;border-top:1px dashed #bbb;padding-top:.45rem;line-height:1.55;word-break:break-word}
+.slip-foot{text-align:center;font-size:.72rem;color:#444;margin-top:.55rem;line-height:1.6}
+.slip-actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.9rem}
+.slip-actions .btn{flex:1;justify-content:center;padding:.7rem .5rem;font-size:.85rem;white-space:nowrap}
 .loc-box{margin:.1rem 0 .9rem}
 .loc-btn{width:100%;justify-content:center}
 .loc-status{font-size:.8rem;color:var(--muted);margin-top:.45rem;line-height:1.45}
@@ -313,6 +330,7 @@ footer a:hover{color:var(--gold)}
       <span class="eyebrow">Our Menu</span>
       <h2>Choose Your Favourite</h2>
       <p>16 hand-crafted pizzas. Pick a size, tap Add — your cart does the rest.</p>
+      <p style="margin-top:1rem"><a class="btn btn-gold" href="menu.html"><i class="fa-solid fa-download"></i> Download Menu</a></p>
     </div>
     <div class="menu-grid" id="menuGrid"></div>
   </div>
@@ -387,7 +405,7 @@ footer a:hover{color:var(--gold)}
       </div>
       <div>
         <h4>Explore</h4>
-        <p><a href="#menu">Menu</a><br><a href="#deals">Deals</a><br><a href="#branches">Branches</a><br><a href="#about">About</a></p>
+        <p><a href="#menu">Menu</a><br><a href="menu.html">Download Menu</a><br><a href="#deals">Deals</a><br><a href="#branches">Branches</a><br><a href="#about">About</a></p>
       </div>
       <div>
         <h4>Order</h4>
@@ -666,6 +684,39 @@ document.getElementById("checkoutBtn").addEventListener("click", ()=>{
   toggleCart(false); modal.classList.add("show");
 });
 document.getElementById("modalCancel").addEventListener("click", ()=>modal.classList.remove("show"));
+/* ===== Order slip (customer copy) ===== */
+const SLIP_PRINT_CSS = "body{font-family:'Courier New',monospace;margin:0;padding:10px;color:#111}.slip{max-width:340px;margin:0 auto}.slip-head{text-align:center}.slip-head img{width:52px;height:52px;border-radius:50%}.slip-head h4{font-size:1.25rem;margin:.2rem 0}.slip-head p{font-size:.72rem;color:#444;line-height:1.5;margin:0}.slip-meta{display:flex;justify-content:space-between;gap:8px;font-size:.74rem;border-top:1px dashed #999;border-bottom:1px dashed #999;padding:.35rem 0;flex-wrap:wrap}.slip-table{width:100%;border-collapse:collapse;font-size:.78rem;margin:.4rem 0}.slip-table th{border-bottom:1px solid #999;text-align:left;padding:.25rem 0}.slip-table td{padding:.28rem 0;border-bottom:1px dotted #bbb;vertical-align:top}.slip-table .c{text-align:center}.slip-table .r{text-align:right}.slip-row{display:flex;justify-content:space-between;font-size:.8rem;padding:.2rem 0}.slip-row.grand{font-size:.95rem;border-top:1.5px solid #111;border-bottom:1.5px solid #111;padding:.35rem 0;margin:.25rem 0}.slip-cust{font-size:.76rem;border-top:1px dashed #999;padding-top:.45rem;line-height:1.55;word-break:break-word}.slip-foot{text-align:center;font-size:.72rem;color:#444;margin-top:.55rem;line-height:1.6}@media print{body{padding:0}}";
+function escT(t){ return String(t ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function pktNow(){ return new Date().toLocaleString("en-GB", { timeZone:"Asia/Karachi", day:"2-digit", month:"short", year:"numeric", hour:"2-digit", minute:"2-digit", hour12:true }); }
+function buildSlip(o){
+  const rows = o.items.map(i=>`<tr><td>${escT(i.name)}${i.detail?` <small>(${escT(i.detail)})</small>`:""}</td><td class="c">${i.qty}</td><td class="r">${i.price}</td><td class="r">${i.price*i.qty}</td></tr>`).join("");
+  return `<div class="slip">
+    <div class="slip-head"><img src="Pizzaimages/daynight-emblem.png" alt=""><h4>DAY NIGHT PIZZA</h4><p>Main Bazar Thana Road, Dunga Bunga<br>Phone: 0304-7922262</p></div>
+    <div class="slip-meta"><span>Token # <b>${o.id ?? "—"}</b></span><span><b>${escT(o.mode)}</b></span></div>
+    <div class="slip-meta"><span>Order ID: ${o.id ?? "—"}</span><span>${o.when}</span></div>
+    <table class="slip-table"><tr><th>Item</th><th class="c">Qty</th><th class="r">Rate</th><th class="r">Total</th></tr>${rows}</table>
+    <div class="slip-row"><span>Sub Total</span><b>${o.total} Rs</b></div>
+    <div class="slip-row grand"><span>GRAND TOTAL</span><b>${o.total} Rs</b></div>
+    <div class="slip-meta"><span>Payment: ${escT(o.payment)}</span><span>${escT(o.payStatus)}</span></div>
+    <div class="slip-cust"><b>Customer Detail</b><br>${escT(o.name)} · ${escT(o.phone)}<br>${escT(o.address) || "—"}${o.loc?`<br>Location: ${escT(o.loc)}`:""}</div>
+    <p class="slip-foot">For any complaint &amp; suggestions<br>please contact us at 0304-7922262<br><b>Thank you for ordering!</b></p>
+  </div>`;
+}
+function slipText(o){
+  const lines = o.items.map(i=>`• ${i.name}${i.detail?` (${i.detail})`:""} x${i.qty} — Rs. ${i.price*i.qty}`);
+  return [`🧾 DAY NIGHT PIZZA — Order Slip`, `Token # ${o.id ?? "—"} · ${o.mode}`, `${o.when}`, `--------------------------`,
+    ...lines, `--------------------------`, `GRAND TOTAL: Rs. ${o.total}`, `Payment: ${o.payment}`,
+    `Name: ${o.name}`, `Phone: ${o.phone}`, `Address: ${o.address || "—"}`,
+    ...(o.loc ? [`Location: ${o.loc}`] : []), `Shukriya! Day Night Pizza, Dunga Bunga · 0304-7922262`].join("\n");
+}
+function printSlip(o){
+  const w = window.open("", "_blank", "width=430,height=680");
+  if (!w) { showToast("Popup blocked — allow popups to print the slip"); return; }
+  w.document.write(`<!DOCTYPE html><html><head><title>Day Night Pizza — Order Slip</title><style>${SLIP_PRINT_CSS}</style></head><body>${buildSlip(o)}</body></html>`);
+  w.document.close(); w.focus();
+  setTimeout(()=>{ try { w.print(); } catch(e) {} }, 400);
+}
+
 document.getElementById("checkoutForm").addEventListener("submit", async e=>{
   e.preventDefault();
   const total = cart.reduce((a,c)=>a+c.qty*c.price,0);
@@ -686,12 +737,26 @@ document.getElementById("checkoutForm").addEventListener("submit", async e=>{
     const res = await fetch(API_BASE + "/api/orders", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(payload)});
     if (res.ok) { const d = await res.json(); orderId = d.order_id; sent = true; }
   } catch(_) { /* offline / file mode: fall through to demo confirmation */ }
+  const slipOrder = {
+    id: orderId, mode: payload.mode, when: pktNow(),
+    items: payload.items, total, payment: payload.payment_method,
+    payStatus: payload.payment_method === "Cash on Delivery" ? "Unpaid" : "Gateway",
+    name, phone: payload.phone, address: payload.address,
+    loc: payload.notes ? payload.notes.replace("Live location: ", "") : ""
+  };
+  window.__lastSlip = slipOrder;
   document.querySelector("#checkoutModal .modal-card").innerHTML = `
-    <div style="text-align:center;padding:1rem 0">
-      <i class="fa-solid fa-circle-check" style="font-size:3rem;color:var(--green)"></i>
-      <h3 style="margin:.8rem 0 .4rem">Order Confirmed!</h3>
-      <p>Thank you, <b>${name}</b>. Your order of <b>Rs. ${total.toLocaleString()}</b> has been placed.${sent ? `<br>Order number: <b>#${orderId}</b> — the shop can see it in the admin panel.` : `<br>(Demo confirmation — the server was not reachable.)`}</p>
-      <button class="checkout-btn" onclick="location.reload()">Back to Menu</button>
+    <div style="text-align:center;padding:.6rem 0">
+      <i class="fa-solid fa-circle-check" style="font-size:2.6rem;color:var(--green)"></i>
+      <h3 style="margin:.6rem 0 .3rem">Order Confirmed!</h3>
+      <p>Thank you, <b>${escT(name)}</b>. Your order of <b>Rs. ${total.toLocaleString()}</b> has been placed.${sent ? ` Order number: <b>#${orderId}</b>` : ` (Demo confirmation — the server was not reachable.)`}</p>
+      ${buildSlip(slipOrder)}
+      <div class="slip-actions">
+        <button type="button" class="btn btn-gold" onclick="printSlip(window.__lastSlip)"><i class="fa-solid fa-download"></i> Download Slip</button>
+        <button type="button" class="btn btn-ghost" onclick="window.open('https://wa.me/?text=' + encodeURIComponent(slipText(window.__lastSlip)), '_blank')"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
+        <button type="button" class="btn btn-ghost" onclick="location.href = 'sms:?&body=' + encodeURIComponent(slipText(window.__lastSlip))"><i class="fa-solid fa-message"></i> SMS</button>
+      </div>
+      <button class="checkout-btn" style="margin-top:.9rem" onclick="location.reload()">Back to Menu</button>
     </div>`;
   cart = []; updateCart();
 });
